@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roblox Gaming Portal</title>
+    <title>MTDS THE TICKET</title>
     <!-- Google Fonts & FontAwesome Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -26,7 +26,7 @@
             position: relative;
         }
 
-        /* Ambient Glowing Background Effect */
+        /* Hiệu ứng đèn Neon nền */
         .glow-orb {
             position: absolute;
             border-radius: 50%;
@@ -56,7 +56,7 @@
             100% { transform: scale(1.2) translate(30px, -30px); }
         }
 
-        /* Main Container */
+        /* Khung chứa chính */
         .portal-container {
             position: relative;
             z-index: 10;
@@ -65,9 +65,9 @@
             padding: 20px;
         }
 
-        /* Glassmorphism Card Style */
+        /* Phong cách Glassmorphism */
         .glass-card {
-            background: rgba(18, 20, 29, 0.65);
+            background: rgba(18, 20, 29, 0.75);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -83,7 +83,7 @@
             box-shadow: 0 20px 50px rgba(255, 0, 85, 0.15);
         }
 
-        /* Header Logo Icon */
+        /* Logo Icon */
         .brand-icon {
             width: 70px;
             height: 70px;
@@ -118,7 +118,7 @@
             margin-bottom: 30px;
         }
 
-        /* Input Styling */
+        /* Ô nhập liệu */
         .input-box {
             position: relative;
             margin-bottom: 20px;
@@ -156,7 +156,7 @@
             color: #ff0055;
         }
 
-        /* Neon Button */
+        /* Nút bấm Neon */
         .btn-action {
             width: 100%;
             padding: 16px;
@@ -179,11 +179,6 @@
         .btn-action:hover {
             transform: translateY(-3px);
             box-shadow: 0 15px 30px rgba(255, 0, 85, 0.5);
-            background: linear-gradient(135deg, #ff1a66, #801a00);
-        }
-
-        .btn-action:active {
-            transform: translateY(0);
         }
 
         #status-msg {
@@ -193,11 +188,11 @@
             min-height: 20px;
         }
 
-        /* Dashboard Profile View */
+        /* Khung hiển thị Avatar Roblox */
         .avatar-container {
             position: relative;
-            width: 110px;
-            height: 110px;
+            width: 120px;
+            height: 120px;
             margin: 0 auto 20px;
         }
 
@@ -208,15 +203,15 @@
             border: 3px solid #ff0055;
             object-fit: cover;
             background: #1a1c23;
-            box-shadow: 0 0 20px rgba(255, 0, 85, 0.4);
+            box-shadow: 0 0 25px rgba(255, 0, 85, 0.5);
         }
 
         .status-badge {
             position: absolute;
             bottom: 5px;
             right: 5px;
-            width: 18px;
-            height: 18px;
+            width: 20px;
+            height: 20px;
             background: #10b981;
             border: 3px solid #12141d;
             border-radius: 50%;
@@ -254,7 +249,6 @@
 </head>
 <body>
 
-    <!-- Light Background Glows -->
     <div class="glow-orb orb-1"></div>
     <div class="glow-orb orb-2"></div>
 
@@ -266,10 +260,10 @@
                 <i class="fa-solid fa-gamepad"></i>
             </div>
             <h2>ROBLOX CONNECT</h2>
-            <p class="subtitle">Nhập Username để liên kết tài khoản</p>
+            <p class="subtitle">Nhập Username để tải thông tin tài khoản</p>
 
             <div class="input-box">
-                <input type="text" id="roblox-username" placeholder="Tên tài khoản Roblox..." autocomplete="off">
+                <input type="text" id="roblox-username" placeholder="Nhập tên Roblox của bạn..." autocomplete="off">
                 <i class="fa-solid fa-user"></i>
             </div>
 
@@ -281,15 +275,17 @@
             <div id="status-msg"></div>
         </div>
 
-        <!-- MAN HINH TRANG THAI KHIN DA DANG NHAP -->
+        <!-- MÀN HÌNH HIỂN THỊ AVATAR & THÔNG TIN -->
         <div class="glass-card hidden" id="dashboard-card">
             <div class="avatar-container">
                 <img id="user-avatar" class="avatar-img" src="" alt="Roblox Avatar">
-                <div class="status-badge"></div>
+                <div class="status-badge" title="Tài khoản hoạt động"></div>
             </div>
             
             <h2 id="welcome-username">Username</h2>
-            <div class="user-tag"><i class="fa-solid fa-circle-check"></i> Đã xác minh Roblox</div>
+            <p id="display-name" style="color: #a0a5b5; font-size: 14px; margin-top: -5px; margin-bottom: 15px;"></p>
+            
+            <div class="user-tag"><i class="fa-solid fa-circle-check"></i> Đã xác thực từ Roblox API</div>
 
             <button class="btn-action btn-logout" onclick="logout()">
                 <i class="fa-solid fa-power-off"></i>
@@ -300,11 +296,14 @@
     </div>
 
     <script>
-        // Kiểm tra phiên đăng nhập cũ
+        // Tự động kiểm tra phiên đăng nhập đã lưu
         window.onload = function() {
             const savedUser = localStorage.getItem("robloxUser");
-            if (savedUser) {
-                renderDashboard(savedUser);
+            const savedAvatar = localStorage.getItem("robloxAvatar");
+            const savedDisplayName = localStorage.getItem("robloxDisplayName");
+            
+            if (savedUser && savedAvatar) {
+                renderDashboard(savedUser, savedDisplayName, savedAvatar);
             }
         };
 
@@ -319,33 +318,73 @@
             }
 
             msg.style.color = "#60a5fa";
-            msg.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> Đang kết nối Roblox...";
+            msg.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> Đang tìm tài khoản Roblox...";
 
-            // Lưu tên vào máy người dùng
-            localStorage.setItem("robloxUser", usernameInput);
+            try {
+                // 1. Gọi API lấy User ID và Display Name từ Roblox
+                const userRes = await fetch('https://corsproxy.io/?https://users.roblox.com/v1/usernames/users', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        usernames: [usernameInput],
+                        excludeBannedUsers: false
+                    })
+                });
 
-            setTimeout(() => {
-                renderDashboard(usernameInput);
-            }, 1000);
+                const userData = await userRes.json();
+
+                if (!userData.data || userData.data.length === 0) {
+                    msg.style.color = "#ef4444";
+                    msg.innerHTML = "<i class='fa-solid fa-circle-xmark'></i> Không tìm thấy Username này!";
+                    return;
+                }
+
+                const userId = userData.data[0].id;
+                const realUsername = userData.data[0].name;
+                const displayName = userData.data[0].displayName;
+
+                msg.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> Đang tải Avatar...";
+
+                // 2. Gọi API Roblox Thumbnails để lấy ảnh Avatar chân dung chất lượng cao (420x420)
+                const avatarRes = await fetch(`https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${userId}&size=420x420&format=Png&isCircular=false`);
+                const avatarData = await avatarRes.json();
+
+                let avatarUrl = "";
+                if (avatarData.data && avatarData.data.length > 0) {
+                    avatarUrl = avatarData.data[0].imageUrl;
+                } else {
+                    avatarUrl = "https://tr.rbxcdn.com/30day-avatar-headshot"; // Ảnh dự phòng
+                }
+
+                // 3. Lưu dữ liệu vào LocalStorage
+                localStorage.setItem("robloxUser", realUsername);
+                localStorage.setItem("robloxDisplayName", displayName);
+                localStorage.setItem("robloxAvatar", avatarUrl);
+
+                // 4. Hiển thị thông tin
+                renderDashboard(realUsername, displayName, avatarUrl);
+
+            } catch (error) {
+                console.error("Lỗi:", error);
+                msg.style.color = "#ef4444";
+                msg.innerHTML = "<i class='fa-solid fa-wifi'></i> Lỗi kết nối API! Vui lòng thử lại.";
+            }
         }
 
-        function renderDashboard(username) {
+        function renderDashboard(username, displayName, avatarUrl) {
             document.getElementById('login-card').classList.add('hidden');
             document.getElementById('dashboard-card').classList.remove('hidden');
-            document.getElementById('welcome-username').innerText = username;
-
-            // Tải ảnh đại diện Roblox của người dùng thông qua API public
-            const avatarImg = document.getElementById('user-avatar');
-            avatarImg.src = `https://unavatar.io/roblox/${username}`;
             
-            // Trường hợp không tìm thấy avatar thì dùng ảnh mặc định gaming
-            avatarImg.onerror = function() {
-                avatarImg.src = 'https://tr.rbxcdn.com/30day-avatar-headshot';
-            };
+            document.getElementById('welcome-username').innerText = displayName || username;
+            document.getElementById('display-name').innerText = `@${username}`;
+            document.getElementById('user-avatar').src = avatarUrl;
         }
 
         function logout() {
             localStorage.removeItem("robloxUser");
+            localStorage.removeItem("robloxDisplayName");
+            localStorage.removeItem("robloxAvatar");
+            
             document.getElementById('roblox-username').value = "";
             document.getElementById('status-msg').innerText = "";
             
