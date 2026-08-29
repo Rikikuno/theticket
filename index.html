@@ -223,7 +223,7 @@
             color: #fff;
         }
 
-        /* KHUNG VÉ SỰ KIỆN CO SẮP VẠCH ĐỨT */
+        /* KHUNG VÉ SỰ KIỆN */
         .ticket-card {
             display: grid;
             grid-template-columns: 1fr 1.2fr;
@@ -234,7 +234,7 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        /* Bên trái vé chứa vạch đứt border-right */
+        /* Phân cách đường đứt nét ở cuống vé */
         .ticket-left {
             padding: 30px 25px;
             display: flex;
@@ -242,7 +242,7 @@
             justify-content: space-between;
             position: relative;
             background: #232630;
-            border-right: 2px dashed rgba(255, 255, 255, 0.25); /* Vạch đứt phân cách cuống vé */
+            border-right: 2px dashed rgba(255, 255, 255, 0.25);
         }
 
         .ticket-title {
@@ -320,25 +320,30 @@
             text-align: center;
         }
 
+        /* Khung bên phải hiển thị đầy đủ ảnh poster */
         .ticket-right {
             position: relative;
             min-height: 250px;
-            background: #181a20;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
         }
 
         .ticket-right img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain; /* Hiển thị trọn vẹn 100% hình ảnh không bị cắt xén */
             display: block;
         }
 
-        /* Lỗ khuyết hai bên vé chuẩn màu #08090d */
+        /* Lỗ khuyết hai đầu vé trùng màu nền #08090d */
         .ticket-notch-top, .ticket-notch-bottom {
             position: absolute;
             width: 24px;
             height: 24px;
-            background: #08090d; /* Trùng khớp màu nền */
+            background: #08090d;
             border-radius: 50%;
             z-index: 5;
             left: calc(45.45% - 12px);
@@ -401,12 +406,14 @@
             overflow: hidden;
             margin-top: 20px;
             border: 1px solid rgba(255, 255, 255, 0.1);
+            background: #000;
         }
 
         .banner-bottom img {
             width: 100%;
             height: auto;
             display: block;
+            object-fit: contain;
         }
 
         .hidden {
@@ -425,7 +432,7 @@
                 display: none;
             }
             .ticket-right {
-                height: 200px;
+                height: 220px;
             }
         }
     </style>
@@ -511,7 +518,6 @@
                 </div>
 
                 <div class="ticket-right">
-                    <!-- Đảm bảo file ảnh này nằm cùng thư mục trên GitHub -->
                     <img src="./CHUONG_TRINH_NGHE_THUAT_ANH_SANG_CHAO_MUNG_KY_NIEM_50_NAM_Ngay_Giai_phong_Mien_Nam_thong_nhat_at_nuoc_3041975_-_3042025_3.png" alt="Poster Hào Khí Tháng Tám">
                 </div>
             </div>
@@ -541,7 +547,6 @@
                 </p>
 
                 <div class="banner-bottom">
-                    <!-- Đảm bảo file ảnh này nằm cùng thư mục trên GitHub -->
                     <img src="./CHAO_MUNG_QUY_KHAN_GIA_1.png" alt="Cảm ơn vì đã đến">
                 </div>
             </div>
