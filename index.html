@@ -16,9 +16,12 @@
             font-family: 'Outfit', sans-serif;
         }
 
+        /* Nền Gradient động tông Dark Blue */
         body {
             min-height: 100vh;
-            background-color: #08090d;
+            background: linear-gradient(-45deg, #03045e, #023e8a, #0077b6, #001233);
+            background-size: 400% 400%;
+            animation: gradientBG 12s ease infinite;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -26,28 +29,34 @@
             position: relative;
         }
 
-        /* Hiệu ứng đèn Neon nền */
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Hiệu ứng Đèn Neon xanh mờ */
         .glow-orb {
             position: absolute;
             border-radius: 50%;
-            filter: blur(120px);
+            filter: blur(100px);
             z-index: 0;
             animation: pulse 8s infinite alternate;
         }
         .orb-1 {
-            width: 350px;
-            height: 350px;
-            background: #ff0055;
-            top: -50px;
-            left: -50px;
-            opacity: 0.5;
-        }
-        .orb-2 {
             width: 400px;
             height: 400px;
-            background: #7000ff;
-            bottom: -80px;
-            right: -80px;
+            background: #00b4d8;
+            top: -100px;
+            left: -100px;
+            opacity: 0.35;
+        }
+        .orb-2 {
+            width: 450px;
+            height: 450px;
+            background: #03045e;
+            bottom: -120px;
+            right: -120px;
             opacity: 0.6;
         }
 
@@ -67,27 +76,27 @@
 
         /* Phong cách Glassmorphism */
         .glass-card {
-            background: rgba(18, 20, 29, 0.75);
+            background: rgba(10, 17, 40, 0.75);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.12);
             border-radius: 24px;
             padding: 40px 30px;
             text-align: center;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .glass-card:hover {
-            border-color: rgba(255, 0, 85, 0.3);
-            box-shadow: 0 20px 50px rgba(255, 0, 85, 0.15);
+            border-color: rgba(0, 180, 216, 0.4);
+            box-shadow: 0 20px 50px rgba(0, 119, 182, 0.3);
         }
 
-        /* Logo Icon */
+        /* Logo Icon Dark Blue */
         .brand-icon {
             width: 70px;
             height: 70px;
-            background: linear-gradient(135deg, #ff0055, #7000ff);
+            background: linear-gradient(135deg, #0077b6, #03045e);
             border-radius: 18px;
             display: flex;
             align-items: center;
@@ -95,7 +104,8 @@
             margin: 0 auto 20px;
             font-size: 32px;
             color: #fff;
-            box-shadow: 0 10px 25px rgba(255, 0, 85, 0.4);
+            box-shadow: 0 10px 25px rgba(0, 119, 182, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             transform: rotate(-5deg);
             transition: transform 0.3s ease;
         }
@@ -113,7 +123,7 @@
         }
 
         p.subtitle {
-            color: #a0a5b5;
+            color: #94a3b8;
             font-size: 14px;
             margin-bottom: 30px;
         }
@@ -129,7 +139,7 @@
             left: 16px;
             top: 50%;
             transform: translateY(-50%);
-            color: #6b7280;
+            color: #64748b;
             font-size: 18px;
             transition: color 0.3s;
         }
@@ -138,7 +148,7 @@
             width: 100%;
             padding: 16px 16px 16px 48px;
             background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.12);
             border-radius: 14px;
             color: #fff;
             font-size: 15px;
@@ -148,19 +158,19 @@
 
         .input-box input:focus {
             background: rgba(255, 255, 255, 0.08);
-            border-color: #ff0055;
-            box-shadow: 0 0 15px rgba(255, 0, 85, 0.3);
+            border-color: #00b4d8;
+            box-shadow: 0 0 15px rgba(0, 180, 216, 0.35);
         }
 
         .input-box input:focus + i {
-            color: #ff0055;
+            color: #00b4d8;
         }
 
-        /* Nút bấm Neon */
+        /* Nút bấm Dark Blue Neon */
         .btn-action {
             width: 100%;
             padding: 16px;
-            background: linear-gradient(135deg, #ff0055, #7000ff);
+            background: linear-gradient(135deg, #0077b6, #023e8a);
             border: none;
             border-radius: 14px;
             color: #fff;
@@ -169,7 +179,7 @@
             letter-spacing: 1px;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 10px 25px rgba(255, 0, 85, 0.3);
+            box-shadow: 0 10px 25px rgba(0, 119, 182, 0.35);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -178,7 +188,8 @@
 
         .btn-action:hover {
             transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(255, 0, 85, 0.5);
+            background: linear-gradient(135deg, #0096c7, #0077b6);
+            box-shadow: 0 15px 30px rgba(0, 180, 216, 0.45);
         }
 
         #status-msg {
@@ -188,45 +199,16 @@
             min-height: 20px;
         }
 
-        /* Khung hiển thị Avatar Roblox */
-        .avatar-container {
-            position: relative;
-            width: 120px;
-            height: 120px;
-            margin: 0 auto 20px;
-        }
-
-        .avatar-img {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            border: 3px solid #ff0055;
-            object-fit: cover;
-            background: #1a1c23;
-            box-shadow: 0 0 25px rgba(255, 0, 85, 0.5);
-        }
-
-        .status-badge {
-            position: absolute;
-            bottom: 5px;
-            right: 5px;
-            width: 20px;
-            height: 20px;
-            background: #10b981;
-            border: 3px solid #12141d;
-            border-radius: 50%;
-        }
-
         .user-tag {
             display: inline-block;
-            background: rgba(16, 185, 129, 0.15);
-            color: #10b981;
+            background: rgba(0, 180, 216, 0.15);
+            color: #38bdf8;
             padding: 6px 14px;
             border-radius: 20px;
             font-size: 13px;
             font-weight: 600;
             margin-bottom: 25px;
-            border: 1px solid rgba(16, 185, 129, 0.3);
+            border: 1px solid rgba(0, 180, 216, 0.3);
         }
 
         .btn-logout {
@@ -260,7 +242,7 @@
                 <i class="fa-solid fa-gamepad"></i>
             </div>
             <h2>ROBLOX CONNECT</h2>
-            <p class="subtitle">Nhập Username để tải thông tin tài khoản</p>
+            <p class="subtitle">Nhập Username để kết nối tài khoản</p>
 
             <div class="input-box">
                 <input type="text" id="roblox-username" placeholder="Nhập tên Roblox của bạn..." autocomplete="off">
@@ -275,15 +257,14 @@
             <div id="status-msg"></div>
         </div>
 
-        <!-- MÀN HÌNH HIỂN THỊ AVATAR & THÔNG TIN -->
+        <!-- MÀN HÌNH HIỂN THỊ THÔNG TIN ĐÃ XÁC NHẬN -->
         <div class="glass-card hidden" id="dashboard-card">
-            <div class="avatar-container">
-                <img id="user-avatar" class="avatar-img" src="" alt="Roblox Avatar">
-                <div class="status-badge" title="Tài khoản hoạt động"></div>
+            <div class="brand-icon">
+                <i class="fa-solid fa-user-check"></i>
             </div>
             
             <h2 id="welcome-username">Username</h2>
-            <p id="display-name" style="color: #a0a5b5; font-size: 14px; margin-top: -5px; margin-bottom: 15px;"></p>
+            <p id="display-name" style="color: #94a3b8; font-size: 14px; margin-top: -5px; margin-bottom: 15px;"></p>
             
             <div class="user-tag"><i class="fa-solid fa-circle-check"></i> Đã kết nối Roblox thành công</div>
 
@@ -296,13 +277,11 @@
     </div>
 
     <script>
-        // Tự động kiểm tra phiên đăng nhập đã lưu
+        // Kiểm tra phiên làm việc cũ khi tải trang
         window.onload = function() {
             const savedUser = localStorage.getItem("robloxUser");
-            const savedAvatar = localStorage.getItem("robloxAvatar");
-            
-            if (savedUser && savedAvatar) {
-                renderDashboard(savedUser, savedAvatar);
+            if (savedUser) {
+                renderDashboard(savedUser);
             }
         };
 
@@ -316,40 +295,25 @@
                 return;
             }
 
-            msg.style.color = "#60a5fa";
-            msg.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> Đang tải Avatar Roblox...";
+            msg.style.color = "#38bdf8";
+            msg.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> Đang xử lý...";
 
-            // Link lấy avatar Roblox trực tiếp không thông qua API fetch (tránh hoàn toàn lỗi kết nối/CORS)
-            const avatarUrl = `https://unavatar.io/roblox/${encodeURIComponent(usernameInput)}`;
-
-            // Kiểm tra tải ảnh
-            const imgTester = new Image();
-            imgTester.src = avatarUrl;
-
-            imgTester.onload = function() {
+            setTimeout(() => {
                 localStorage.setItem("robloxUser", usernameInput);
-                localStorage.setItem("robloxAvatar", avatarUrl);
-                renderDashboard(usernameInput, avatarUrl);
-            };
-
-            imgTester.onerror = function() {
-                msg.style.color = "#ef4444";
-                msg.innerHTML = "<i class='fa-solid fa-circle-xmark'></i> Không thể tải Avatar! Kiểm tra lại tên Roblox.";
-            };
+                renderDashboard(usernameInput);
+            }, 400);
         }
 
-        function renderDashboard(username, avatarUrl) {
+        function renderDashboard(username) {
             document.getElementById('login-card').classList.add('hidden');
             document.getElementById('dashboard-card').classList.remove('hidden');
             
             document.getElementById('welcome-username').innerText = username;
             document.getElementById('display-name').innerText = `@${username}`;
-            document.getElementById('user-avatar').src = avatarUrl;
         }
 
         function logout() {
             localStorage.removeItem("robloxUser");
-            localStorage.removeItem("robloxAvatar");
             
             document.getElementById('roblox-username').value = "";
             document.getElementById('status-msg').innerText = "";
