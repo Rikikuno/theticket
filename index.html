@@ -3,13 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MTDS THE TICKET - OTP Verification</title>
+    <title>MTDS THE TICKET</title>
     <!-- Google Fonts & FontAwesome Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- SDK EmailJS -->
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
     <style>
         * {
@@ -59,7 +56,7 @@
         }
 
         #login-card {
-            max-width: 460px;
+            max-width: 440px;
             margin: 0 auto;
             padding: 40px 30px;
             text-align: center;
@@ -142,111 +139,6 @@
             box-shadow: 0 0 15px rgba(0, 180, 216, 0.35);
         }
 
-        /* --- THIẾT KẾ 6 Ô VUÔNG OTP VỚI VIỀN XOAY --- */
-        .otp-container {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin: 25px 0 15px 0;
-        }
-
-        .otp-box-wrapper {
-            position: relative;
-            width: 50px;
-            height: 60px;
-            border-radius: 14px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
-
-        /* Lớp nền viền xoay */
-        .otp-box-wrapper::before {
-            content: '';
-            position: absolute;
-            width: 200%;
-            height: 200%;
-            background: conic-gradient(from 0deg, transparent 0 240deg, #00b4d8 360deg);
-            animation: rotateBorder 1.5s linear infinite;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        /* Lớp che bên trong giữ màu tối */
-        .otp-box-wrapper::after {
-            content: '';
-            position: absolute;
-            inset: 2px;
-            background: #12141d;
-            border-radius: 12px;
-            z-index: 1;
-        }
-
-        .otp-box {
-            position: relative;
-            z-index: 2;
-            width: 100%;
-            height: 100%;
-            background: transparent;
-            border: none;
-            outline: none;
-            text-align: center;
-            font-size: 24px;
-            font-weight: 800;
-            color: #fff;
-            caret-color: #00b4d8;
-        }
-
-        /* Trạng thái 1: Khi focus / có người dùng gõ */
-        .otp-box-wrapper.focused::before {
-            opacity: 1;
-        }
-
-        /* Trạng thái 2: Đang xoay kiểm tra OTP */
-        .otp-box-wrapper.verifying::before {
-            opacity: 1;
-            animation-duration: 0.8s;
-            background: conic-gradient(from 0deg, transparent 0 220deg, #00b4d8 360deg);
-        }
-
-        /* Trạng thái 3: Nhập Sai (Lỗi + Shake) */
-        .otp-box-wrapper.error::before {
-            opacity: 1;
-            background: conic-gradient(from 0deg, transparent 0 220deg, #ef4444 360deg);
-        }
-        .otp-box-wrapper.error {
-            border-color: #ef4444;
-            animation: shake 0.4s ease-in-out;
-            box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
-        }
-
-        /* Trạng thái 4: Nhập Đúng (Thành công) */
-        .otp-box-wrapper.success::before {
-            opacity: 1;
-            background: conic-gradient(from 0deg, transparent 0 220deg, #10b981 360deg);
-        }
-        .otp-box-wrapper.success {
-            border-color: #10b981;
-            box-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
-        }
-
-        /* Animation Xoay viền */
-        @keyframes rotateBorder {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Animation Rung lắc khi sai */
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            20%, 60% { transform: translateX(-6px); }
-            40%, 80% { transform: translateX(6px); }
-        }
-
         .btn-action {
             width: 100%;
             padding: 16px;
@@ -270,18 +162,6 @@
             transform: translateY(-2px);
             background: linear-gradient(135deg, #0096c7, #0077b6);
             box-shadow: 0 15px 30px rgba(0, 180, 216, 0.45);
-        }
-
-        .btn-secondary {
-            background: transparent;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: #94a3b8;
-            margin-top: 10px;
-            font-size: 13px;
-            padding: 10px;
-            border-radius: 10px;
-            cursor: pointer;
-            width: 100%;
         }
 
         #status-msg {
@@ -323,8 +203,6 @@
         @media (max-width: 768px) {
             .ticket-card { grid-template-columns: 1fr; }
             .ticket-left { border-right: none; border-bottom: 2px dashed rgba(255, 255, 255, 0.25); }
-            .otp-box-wrapper { width: 42px; height: 52px; }
-            .otp-box { font-size: 20px; }
         }
     </style>
 </head>
@@ -335,16 +213,15 @@
 
     <div class="portal-container">
         
-        <!-- MÀN HÌNH ĐĂNG NHẬP / XÁC THỰC -->
+        <!-- MÀN HÌNH ĐĂNG NHẬP (TRỰC TIẾP) -->
         <div class="glass-card" id="login-card">
             <div class="brand-icon">
-                <i class="fa-solid fa-shield-halved"></i>
+                <i class="fa-solid fa-ticket"></i>
             </div>
-            <h2 class="title-login" id="card-title">XÁC THỰC EMAIL</h2>
-            <p class="subtitle" id="card-subtitle">Mã OTP sẽ được gửi trực tiếp đến Email thật của bạn</p>
+            <h2 class="title-login">ĐĂNG NHẬP VÉ</h2>
+            <p class="subtitle">Nhập thông tin cá nhân để xem thông tin sự kiện</p>
 
-            <!-- BƯỚC 1: NHẬP THÔNG TIN -->
-            <div id="step-1-form">
+            <form id="login-form" onsubmit="event.preventDefault(); handleLogin();">
                 <div class="input-box">
                     <label>Tên người dùng (Username)</label>
                     <div class="input-wrapper">
@@ -354,43 +231,18 @@
                 </div>
 
                 <div class="input-box">
-                    <label>Địa chỉ Email (Thật 100%)</label>
+                    <label>Địa chỉ Email</label>
                     <div class="input-wrapper">
-                        <input type="email" id="user-email" placeholder="Nhập email để nhận OTP..." autocomplete="off">
+                        <input type="email" id="user-email" placeholder="Nhập địa chỉ email..." autocomplete="off">
                         <i class="fa-solid fa-envelope"></i>
                     </div>
                 </div>
 
-                <button class="btn-action" id="btn-send-otp" onclick="sendOTP()">
-                    <span>GỬI MÃ OTP</span>
-                    <i class="fa-solid fa-paper-plane"></i>
+                <button type="submit" class="btn-action">
+                    <span>ĐĂNG NHẬP</span>
+                    <i class="fa-solid fa-arrow-right"></i>
                 </button>
-            </div>
-
-            <!-- BƯỚC 2: NHẬP MÃ OTP VỚI 6 Ô VUÔNG -->
-            <div id="step-2-form" class="hidden">
-                <div class="input-box">
-                    <label style="text-align: center; display: block;">Nhập mã OTP (6 chữ số)</label>
-                    
-                    <div class="otp-container" id="otp-container">
-                        <div class="otp-box-wrapper"><input type="text" maxlength="1" class="otp-box" inputmode="numeric" autocomplete="off"></div>
-                        <div class="otp-box-wrapper"><input type="text" maxlength="1" class="otp-box" inputmode="numeric" autocomplete="off"></div>
-                        <div class="otp-box-wrapper"><input type="text" maxlength="1" class="otp-box" inputmode="numeric" autocomplete="off"></div>
-                        <div class="otp-box-wrapper"><input type="text" maxlength="1" class="otp-box" inputmode="numeric" autocomplete="off"></div>
-                        <div class="otp-box-wrapper"><input type="text" maxlength="1" class="otp-box" inputmode="numeric" autocomplete="off"></div>
-                        <div class="otp-box-wrapper"><input type="text" maxlength="1" class="otp-box" inputmode="numeric" autocomplete="off"></div>
-                    </div>
-                </div>
-
-                <button class="btn-action" id="btn-verify-otp" onclick="verifyOTP()">
-                    <span>XÁC NHẬN OTP</span>
-                    <i class="fa-solid fa-check-circle"></i>
-                </button>
-
-                <button class="btn-secondary" onclick="resetForm()">
-                    <i class="fa-solid fa-arrow-left"></i> Nhập lại Email
-                </button>
-            </div>
+            </form>
 
             <div id="status-msg"></div>
         </div>
@@ -430,7 +282,7 @@
                 <h3 class="intro-title">Giới thiệu</h3>
                 <p class="intro-text">Xin chào và cảm ơn bạn đã đăng ký tham gia chương trình Chính luận – Nghệ thuật ánh sáng <strong>"Hào khí Tháng Tám"</strong>.</p>
                 <ul class="checklist-list">
-                    <li><i class="fa-solid fa-check"></i> Xác minh Email thành công</li>
+                    <li><i class="fa-solid fa-check"></i> Đăng nhập hệ thống thành công</li>
                     <li><i class="fa-solid fa-check"></i> Nhận thông báo từ BTC</li>
                 </ul>
                 <div class="banner-bottom">
@@ -442,25 +294,7 @@
     </div>
 
     <script>
-        // Thông số cấu hình EmailJS
-        const EMAILJS_PUBLIC_KEY = "b2GlPCwH-PmpkEM09";
-        const EMAILJS_SERVICE_ID = "service_3mtds6";
-        const EMAILJS_TEMPLATE_ID = "template_f5ibhzp";
-
-        // Khởi tạo SDK EmailJS
-        (function() {
-            emailjs.init(EMAILJS_PUBLIC_KEY);
-        })();
-
-        let generatedOTP = null;
-        let tempUser = "";
-        let tempEmail = "";
-
-        const otpInputs = document.querySelectorAll('.otp-box');
-        const otpWrappers = document.querySelectorAll('.otp-box-wrapper');
-
         window.onload = function() {
-            setupOtpEvents();
             const savedUser = localStorage.getItem("robloxUser");
             const savedEmail = localStorage.getItem("robloxEmail");
             if (savedUser && savedEmail) {
@@ -468,79 +302,15 @@
             }
         };
 
-        // --- BÀN PHÍM VÀ TƯƠNG TÁC CỦA 6 Ô VUÔNG OTP ---
-        function setupOtpEvents() {
-            otpInputs.forEach((input, index) => {
-                // Khi Focus vào ô -> Thêm hiệu ứng xoay viền
-                input.addEventListener('focus', () => {
-                    clearOtpEffects();
-                    otpWrappers[index].classList.add('focused');
-                });
-
-                // Khi rời ô -> Xóa hiệu ứng xoay
-                input.addEventListener('blur', () => {
-                    otpWrappers[index].classList.remove('focused');
-                });
-
-                // Nhập số -> Nhảy sang ô tiếp theo
-                input.addEventListener('input', (e) => {
-                    clearOtpEffects();
-                    const val = e.target.value.replace(/[^0-9]/g, '');
-                    e.target.value = val;
-
-                    if (val && index < otpInputs.length - 1) {
-                        otpInputs[index + 1].focus();
-                    }
-                });
-
-                // Bấm phím Backspace -> Lùi về ô trước
-                input.addEventListener('keydown', (e) => {
-                    clearOtpEffects();
-                    if (e.key === 'Backspace' && !input.value && index > 0) {
-                        otpInputs[index - 1].focus();
-                    }
-                });
-
-                // Dán (Paste) nhanh chuỗi 6 số
-                input.addEventListener('paste', (e) => {
-                    e.preventDefault();
-                    clearOtpEffects();
-                    const pasteData = e.clipboardData.getData('text').trim().replace(/[^0-9]/g, '');
-                    if (pasteData) {
-                        for (let i = 0; i < otpInputs.length; i++) {
-                            otpInputs[i].value = pasteData[i] || '';
-                        }
-                        const focusIdx = Math.min(pasteData.length, otpInputs.length - 1);
-                        otpInputs[focusIdx].focus();
-                    }
-                });
-            });
-        }
-
-        // Lấy toàn bộ chuỗi 6 ô nhập vào
-        function getFullOTP() {
-            let code = '';
-            otpInputs.forEach(input => code += input.value.trim());
-            return code;
-        }
-
-        // Xóa sạch các trạng thái hiệu ứng (Success/Error/Verifying)
-        function clearOtpEffects() {
-            otpWrappers.forEach(w => {
-                w.classList.remove('error', 'success', 'verifying');
-            });
-        }
-
         function validateEmail(email) {
             return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
         }
 
-        // 1. GỬI MÃ OTP
-        function sendOTP() {
+        // Đăng nhập trực tiếp vào hệ thống
+        function handleLogin() {
             const username = document.getElementById('roblox-username').value.trim();
             const email = document.getElementById('user-email').value.trim();
             const msg = document.getElementById('status-msg');
-            const btnSend = document.getElementById('btn-send-otp');
 
             if (!username || !email) {
                 msg.style.color = "#ef4444";
@@ -554,103 +324,15 @@
                 return;
             }
 
-            generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
-            tempUser = username;
-            tempEmail = email;
+            msg.style.color = "#10b981";
+            msg.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> Đang chuyển hướng...";
 
-            msg.style.color = "#38bdf8";
-            msg.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> Đang gửi mã OTP đến Email...";
-            btnSend.disabled = true;
-
-            const templateParams = {
-                to_email: email,
-                user_email: email,
-                email: email,
-                to_name: username,
-                user_name: username,
-                otp_code: generatedOTP,
-                reply_to: email
-            };
-
-            emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
-            .then(() => {
-                msg.style.color = "#10b981";
-                msg.innerHTML = "<i class='fa-solid fa-paper-plane'></i> Đã gửi OTP thành công! Vui lòng kiểm tra hộp thư.";
-                
-                document.getElementById('step-1-form').classList.add('hidden');
-                document.getElementById('step-2-form').classList.remove('hidden');
-                document.getElementById('card-title').innerText = "NHẬP MÃ OTP";
-                document.getElementById('card-subtitle').innerText = `Mã xác nhận đã gửi đến ${email}`;
-                
-                // Focus ô đầu tiên
-                setTimeout(() => otpInputs[0].focus(), 300);
-            })
-            .catch((error) => {
-                btnSend.disabled = false;
-                msg.style.color = "#ef4444";
-                msg.innerHTML = "<i class='fa-solid fa-circle-xmark'></i> Không thể gửi Email. Lỗi: " + JSON.stringify(error);
-            });
-        }
-
-        // 2. XÁC NHẬN MÃ OTP VỚI HIỆU ỨNG VIỀN XOAY
-        function verifyOTP() {
-            const userOTP = getFullOTP();
-            const msg = document.getElementById('status-msg');
-            const btnVerify = document.getElementById('btn-verify-otp');
-
-            if (userOTP.length < 6) {
-                msg.style.color = "#ef4444";
-                msg.innerHTML = "<i class='fa-solid fa-triangle-exclamation'></i> Vui lòng nhập đủ 6 chữ số OTP!";
-                
-                // Tạo hiệu ứng lắc báo lỗi
-                otpWrappers.forEach(w => w.classList.add('error'));
-                setTimeout(() => {
-                    otpWrappers.forEach(w => w.classList.remove('error'));
-                }, 500);
-                return;
-            }
-
-            // BẬT HIỆU ỨNG VIỀN XOAY TẤT CẢ 6 Ô TRONG KHI KIỂM TRA
-            clearOtpEffects();
-            otpWrappers.forEach(w => w.classList.add('verifying'));
-            btnVerify.disabled = true;
-            msg.style.color = "#38bdf8";
-            msg.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> Đang kiểm tra mã OTP...";
-
-            // Chờ 800ms để tạo hiệu ứng xoay chân thực
+            // Lưu thông tin và hiển thị Dashboard
             setTimeout(() => {
-                otpWrappers.forEach(w => w.classList.remove('verifying'));
-                btnVerify.disabled = false;
-
-                if (userOTP === generatedOTP) {
-                    // ĐÚNG OTP: Hiện hiệu ứng viền xanh lá lá sáng
-                    otpWrappers.forEach(w => w.classList.add('success'));
-                    msg.style.color = "#10b981";
-                    msg.innerHTML = "<i class='fa-solid fa-circle-check'></i> Mã OTP chính xác! Đang đăng nhập...";
-
-                    setTimeout(() => {
-                        localStorage.setItem("robloxUser", tempUser);
-                        localStorage.setItem("robloxEmail", tempEmail);
-                        renderDashboard(tempUser, tempEmail);
-                    }, 1000);
-                } else {
-                    // SAI OTP: Hiện hiệu ứng viền đỏ + Rung lắc (Shake)
-                    otpWrappers.forEach(w => w.classList.add('error'));
-                    msg.style.color = "#ef4444";
-                    msg.innerHTML = "<i class='fa-solid fa-circle-xmark'></i> Mã OTP không chính xác. Vui lòng thử lại!";
-                }
-            }, 800);
-        }
-
-        function resetForm() {
-            document.getElementById('step-2-form').classList.add('hidden');
-            document.getElementById('step-1-form').classList.remove('hidden');
-            document.getElementById('btn-send-otp').disabled = false;
-            document.getElementById('card-title').innerText = "XÁC THỰC EMAIL";
-            document.getElementById('card-subtitle').innerText = "Mã OTP sẽ được gửi trực tiếp đến Email thật của bạn";
-            document.getElementById('status-msg').innerText = "";
-            otpInputs.forEach(input => input.value = '');
-            clearOtpEffects();
+                localStorage.setItem("robloxUser", username);
+                localStorage.setItem("robloxEmail", email);
+                renderDashboard(username, email);
+            }, 400);
         }
 
         function renderDashboard(username, email) {
@@ -663,9 +345,11 @@
         function logout() {
             localStorage.removeItem("robloxUser");
             localStorage.removeItem("robloxEmail");
-            resetForm();
             document.getElementById('dashboard-container').classList.add('hidden');
             document.getElementById('login-card').classList.remove('hidden');
+            document.getElementById('status-msg').innerText = "";
+            document.getElementById('roblox-username').value = "";
+            document.getElementById('user-email').value = "";
         }
     </script>
 </body>
