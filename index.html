@@ -2,11 +2,59 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Web của tôi</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng nhập Roblox</title>
+    <style>
+        /* CSS cơ bản để làm đẹp form */
+        .login-box {
+            width: 300px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+        input {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #aaa;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #000;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #333;
+        }
+        #message {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
-    <h1>Chào mừng đến với trang web!</h1>
-    <p>Đây là sản phẩm đầu tay của tôi.</p>
+
+<div class="login-box" id="login-section">
+    <h2>Kết nối Roblox</h2>
+    <p>Nhập Username Roblox của bạn để tiếp tục</p>
+    <input type="text" id="roblox-username" placeholder="Ví dụ: RobloxPlayer123">
+    <button onclick="loginWithRoblox()">Đăng nhập</button>
+    <p id="message"></p>
+</div>
+
+<!-- Phần hiển thị sau khi đăng nhập thành công -->
+<div class="login-box" id="dashboard-section" style="display: none;">
+    <h2 id="welcome-text">Chào mừng!</h2>
+    <button onclick="logout()">Đăng xuất</button>
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>
