@@ -285,7 +285,7 @@
             <h2 id="welcome-username">Username</h2>
             <p id="display-name" style="color: #a0a5b5; font-size: 14px; margin-top: -5px; margin-bottom: 15px;"></p>
             
-            <div class="user-tag"><i class="fa-solid fa-circle-check"></i> Đã xác thực từ Roblox API</div>
+            <div class="user-tag"><i class="fa-solid fa-circle-check"></i> Đã kết nối Roblox thành công</div>
 
             <button class="btn-action btn-logout" onclick="logout()">
                 <i class="fa-solid fa-power-off"></i>
@@ -300,14 +300,13 @@
         window.onload = function() {
             const savedUser = localStorage.getItem("robloxUser");
             const savedAvatar = localStorage.getItem("robloxAvatar");
-            const savedDisplayName = localStorage.getItem("robloxDisplayName");
             
             if (savedUser && savedAvatar) {
-                renderDashboard(savedUser, savedDisplayName, savedAvatar);
+                renderDashboard(savedUser, savedAvatar);
             }
         };
 
-        async function login() {
+        function login() {
             const usernameInput = document.getElementById('roblox-username').value.trim();
             const msg = document.getElementById('status-msg');
 
@@ -318,71 +317,38 @@
             }
 
             msg.style.color = "#60a5fa";
-            msg.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> Đang tìm tài khoản Roblox...";
+            msg.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> Đang tải Avatar Roblox...";
 
-            try {
-                // 1. Gọi API lấy User ID và Display Name từ Roblox
-                const userRes = await fetch('https://corsproxy.io/?https://users.roblox.com/v1/usernames/users', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        usernames: [usernameInput],
-                        excludeBannedUsers: false
-                    })
-                });
+            // Link lấy avatar Roblox trực tiếp không thông qua API fetch (tránh hoàn toàn lỗi kết nối/CORS)
+            const avatarUrl = `https://unavatar.io/roblox/${encodeURIComponent(usernameInput)}`;
 
-                const userData = await userRes.json();
+            // Kiểm tra tải ảnh
+            const imgTester = new Image();
+            imgTester.src = avatarUrl;
 
-                if (!userData.data || userData.data.length === 0) {
-                    msg.style.color = "#ef4444";
-                    msg.innerHTML = "<i class='fa-solid fa-circle-xmark'></i> Không tìm thấy Username này!";
-                    return;
-                }
-
-                const userId = userData.data[0].id;
-                const realUsername = userData.data[0].name;
-                const displayName = userData.data[0].displayName;
-
-                msg.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> Đang tải Avatar...";
-
-                // 2. Gọi API Roblox Thumbnails để lấy ảnh Avatar chân dung chất lượng cao (420x420)
-                const avatarRes = await fetch(`https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${userId}&size=420x420&format=Png&isCircular=false`);
-                const avatarData = await avatarRes.json();
-
-                let avatarUrl = "";
-                if (avatarData.data && avatarData.data.length > 0) {
-                    avatarUrl = avatarData.data[0].imageUrl;
-                } else {
-                    avatarUrl = "https://tr.rbxcdn.com/30day-avatar-headshot"; // Ảnh dự phòng
-                }
-
-                // 3. Lưu dữ liệu vào LocalStorage
-                localStorage.setItem("robloxUser", realUsername);
-                localStorage.setItem("robloxDisplayName", displayName);
+            imgTester.onload = function() {
+                localStorage.setItem("robloxUser", usernameInput);
                 localStorage.setItem("robloxAvatar", avatarUrl);
+                renderDashboard(usernameInput, avatarUrl);
+            };
 
-                // 4. Hiển thị thông tin
-                renderDashboard(realUsername, displayName, avatarUrl);
-
-            } catch (error) {
-                console.error("Lỗi:", error);
+            imgTester.onerror = function() {
                 msg.style.color = "#ef4444";
-                msg.innerHTML = "<i class='fa-solid fa-wifi'></i> Lỗi kết nối API! Vui lòng thử lại.";
-            }
+                msg.innerHTML = "<i class='fa-solid fa-circle-xmark'></i> Không thể tải Avatar! Kiểm tra lại tên Roblox.";
+            };
         }
 
-        function renderDashboard(username, displayName, avatarUrl) {
+        function renderDashboard(username, avatarUrl) {
             document.getElementById('login-card').classList.add('hidden');
             document.getElementById('dashboard-card').classList.remove('hidden');
             
-            document.getElementById('welcome-username').innerText = displayName || username;
+            document.getElementById('welcome-username').innerText = username;
             document.getElementById('display-name').innerText = `@${username}`;
             document.getElementById('user-avatar').src = avatarUrl;
         }
 
         function logout() {
             localStorage.removeItem("robloxUser");
-            localStorage.removeItem("robloxDisplayName");
             localStorage.removeItem("robloxAvatar");
             
             document.getElementById('roblox-username').value = "";
