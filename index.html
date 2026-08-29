@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MTDS THE TICKET.</title>
+    <title>MTDS THE TICKET</title>
     <!-- Google Fonts & FontAwesome Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -72,7 +72,7 @@
 
         /* --- MÀN HÌNH ĐĂNG NHẬP --- */
         #login-card {
-            max-width: 420px;
+            max-width: 440px;
             margin: 0 auto;
             padding: 40px 30px;
             text-align: center;
@@ -105,36 +105,51 @@
         p.subtitle {
             color: #94a3b8;
             font-size: 14px;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
 
         .input-box {
             position: relative;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
+            text-align: left;
         }
 
-        .input-box i {
+        .input-box label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #38bdf8;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper i {
             position: absolute;
             left: 16px;
             top: 50%;
             transform: translateY(-50%);
             color: #64748b;
-            font-size: 18px;
+            font-size: 16px;
         }
 
-        .input-box input {
+        .input-wrapper input {
             width: 100%;
-            padding: 16px 16px 16px 48px;
+            padding: 14px 16px 14px 46px;
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 14px;
+            border-radius: 12px;
             color: #fff;
-            font-size: 15px;
+            font-size: 14px;
             outline: none;
             transition: all 0.3s;
         }
 
-        .input-box input:focus {
+        .input-wrapper input:focus {
             background: rgba(255, 255, 255, 0.08);
             border-color: #00b4d8;
             box-shadow: 0 0 15px rgba(0, 180, 216, 0.35);
@@ -143,6 +158,7 @@
         .btn-action {
             width: 100%;
             padding: 16px;
+            margin-top: 10px;
             background: linear-gradient(135deg, #0077b6, #023e8a);
             border: none;
             border-radius: 14px;
@@ -166,7 +182,7 @@
 
         #status-msg {
             margin-top: 18px;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             min-height: 20px;
             line-height: 1.4;
@@ -196,14 +212,19 @@
         }
 
         .user-avatar-icon {
-            width: 40px;
-            height: 40px;
+            width: 42px;
+            height: 42px;
             border-radius: 50%;
             background: linear-gradient(135deg, #0077b6, #00b4d8);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 18px;
+        }
+
+        .user-details {
+            display: flex;
+            flex-direction: column;
         }
 
         .btn-logout-sm {
@@ -446,12 +467,23 @@
             <div class="brand-icon">
                 <i class="fa-solid fa-gamepad"></i>
             </div>
-            <h2 class="title-login">ROBLOX CONNECT</h2>
-            <p class="subtitle">Nhập Username để kết nối tài khoản Roblox của bạn</p>
+            <h2 class="title-login">MTDS CONNECT</h2>
+            <p class="subtitle">Đăng nhập thông tin để nhận vé tham gia sự kiện</p>
 
             <div class="input-box">
-                <input type="text" id="roblox-username" placeholder="Nhập tên Roblox của bạn..." autocomplete="off">
-                <i class="fa-solid fa-user"></i>
+                <label>Tên người dùng (Username Roblox)</label>
+                <div class="input-wrapper">
+                    <input type="text" id="roblox-username" placeholder="Nhập tên Roblox của bạn..." autocomplete="off">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+            </div>
+
+            <div class="input-box">
+                <label>Địa chỉ Email (Xác nhận vé)</label>
+                <div class="input-wrapper">
+                    <input type="email" id="user-email" placeholder="Nhập email chính thức (vd: name@gmail.com)..." autocomplete="off">
+                    <i class="fa-solid fa-envelope"></i>
+                </div>
             </div>
 
             <button class="btn-action" id="btn-submit" onclick="login()">
@@ -468,9 +500,9 @@
             <div class="user-header-bar">
                 <div class="user-info">
                     <div class="user-avatar-icon"><i class="fa-solid fa-user"></i></div>
-                    <div>
+                    <div class="user-details">
                         <div style="font-weight: 700; font-size: 15px;" id="welcome-username">Username</div>
-                        <div style="color: #10b981; font-size: 12px;"><i class="fa-solid fa-circle-check"></i> Đã xác thực trên Roblox</div>
+                        <div style="color: #38bdf8; font-size: 12px;" id="welcome-email"><i class="fa-solid fa-envelope"></i> email@example.com</div>
                     </div>
                 </div>
                 <button class="btn-logout-sm" onclick="logout()">
@@ -553,106 +585,82 @@
     </div>
 
     <script>
+        // Tự động kiểm tra nếu đã từng đăng nhập
         window.onload = function() {
             const savedUser = localStorage.getItem("robloxUser");
-            if (savedUser) {
-                renderDashboard(savedUser);
+            const savedEmail = localStorage.getItem("robloxEmail");
+            if (savedUser && savedEmail) {
+                renderDashboard(savedUser, savedEmail);
             }
         };
 
-        // Hàm gọi API Roblox đa tầng kiểm tra tài khoản (xử lý triệt để lỗi CORS & Proxy)
-        async function checkRobloxUserExists(username) {
-            const payload = JSON.stringify({
-                usernames: [username],
-                excludeBannedUsers: false
-            });
-
-            // Danh sách các cổng proxy dự phòng
-            const endpoints = [
-                "https://corsproxy.io/?https://users.roblox.com/v1/usernames/users",
-                "https://users.roproxy.com/v1/usernames/users"
-            ];
-
-            for (let url of endpoints) {
-                try {
-                    const response = await fetch(url, {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: payload
-                    });
-
-                    if (response.ok) {
-                        const result = await response.json();
-                        if (result.data && result.data.length > 0) {
-                            return { success: true, user: result.data[0] };
-                        } else {
-                            return { success: false, error: "Tài khoản không tồn tại trên Roblox!" };
-                        }
-                    }
-                } catch (e) {
-                    console.warn("Proxy gặp sự cố, chuyển sang cổng dự phòng...", e);
-                }
-            }
-
-            return { 
-                success: false, 
-                error: "Không thể kết nối máy chủ Roblox. Vui lòng mở trang qua Live Server hoặc kiểm tra kết nối!" 
-            };
+        // Biểu thức chính quy (Regex) kiểm tra chuẩn cấu trúc Email
+        function validateEmail(email) {
+            const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            return regex.test(email);
         }
 
-        async function login() {
+        function login() {
             const usernameInput = document.getElementById('roblox-username').value.trim();
+            const emailInput = document.getElementById('user-email').value.trim();
             const msg = document.getElementById('status-msg');
-            const btn = document.getElementById('btn-submit');
 
+            // 1. Kiểm tra Username không được để trống
             if (!usernameInput) {
                 msg.style.color = "#ef4444";
-                msg.innerHTML = "<i class='fa-solid fa-circle-exclamation'></i> Vui lòng nhập Username Roblox!";
+                msg.innerHTML = "<i class='fa-solid fa-circle-exclamation'></i> Vui lòng nhập Username!";
                 return;
             }
 
-            // Trạng thái đang kiểm tra
-            msg.style.color = "#38bdf8";
-            msg.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> Đang kiểm tra tài khoản trên Roblox...";
-            btn.style.pointerEvents = "none";
-            btn.style.opacity = "0.7";
-
-            // Gọi API kiểm tra tên thực tế
-            const checkResult = await checkRobloxUserExists(usernameInput);
-
-            btn.style.pointerEvents = "auto";
-            btn.style.opacity = "1";
-
-            if (checkResult.success) {
-                const realUsername = checkResult.user.name; // Lấy đúng tên chuẩn từ Roblox
-                msg.style.color = "#10b981";
-                msg.innerHTML = `<i class='fa-solid fa-circle-check'></i> Tìm thấy người chơi <b>${realUsername}</b>! Đang đăng nhập...`;
-
-                setTimeout(() => {
-                    localStorage.setItem("robloxUser", realUsername);
-                    renderDashboard(realUsername);
-                }, 800);
-            } else {
+            // 2. Kiểm tra Email không được để trống
+            if (!emailInput) {
                 msg.style.color = "#ef4444";
-                msg.innerHTML = `<i class='fa-solid fa-triangle-exclamation'></i> ${checkResult.error}`;
+                msg.innerHTML = "<i class='fa-solid fa-circle-exclamation'></i> Vui lòng nhập Email!";
+                return;
             }
+
+            // 3. Kiểm tra tính hợp lệ của định dạng Email
+            if (!validateEmail(emailInput)) {
+                msg.style.color = "#ef4444";
+                msg.innerHTML = "<i class='fa-solid fa-triangle-exclamation'></i> Email không đúng định dạng (ví dụ đúng: ten@gmail.com)!";
+                return;
+            }
+
+            // Xử lý đăng nhập thành công
+            msg.style.color = "#10b981";
+            msg.innerHTML = "<i class='fa-solid fa-circle-check'></i> Xác minh Email thành công! Đang vào hệ thống...";
+
+            setTimeout(() => {
+                localStorage.setItem("robloxUser", usernameInput);
+                localStorage.setItem("robloxEmail", emailInput);
+                renderDashboard(usernameInput, emailInput);
+            }, 800);
         }
 
-        function renderDashboard(username) {
+        function renderDashboard(username, email) {
             document.getElementById('login-card').classList.add('hidden');
             document.getElementById('dashboard-container').classList.remove('hidden');
             document.getElementById('welcome-username').innerText = username;
+            document.getElementById('welcome-email').innerText = email;
         }
 
         function logout() {
             localStorage.removeItem("robloxUser");
+            localStorage.removeItem("robloxEmail");
             document.getElementById('roblox-username').value = "";
+            document.getElementById('user-email').value = "";
             document.getElementById('status-msg').innerText = "";
             document.getElementById('dashboard-container').classList.add('hidden');
             document.getElementById('login-card').classList.remove('hidden');
         }
 
         // Cho phép nhấn Enter để đăng nhập
+        document.getElementById("user-email").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                login();
+            }
+        });
         document.getElementById("roblox-username").addEventListener("keypress", function(event) {
             if (event.key === "Enter") {
                 event.preventDefault();
