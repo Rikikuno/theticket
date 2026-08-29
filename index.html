@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MTDS THE TICKET</title>
-    <!-- Google Fonts & FontAwesome Icons -->
+    <title>MTDS THE TICKET - OTP Verification</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
     <style>
         * {
             margin: 0;
@@ -27,7 +28,6 @@
             position: relative;
         }
 
-        /* Hiệu ứng Đèn Neon mờ */
         .glow-orb {
             position: fixed;
             border-radius: 50%;
@@ -35,22 +35,8 @@
             z-index: 0;
             pointer-events: none;
         }
-        .orb-1 {
-            width: 400px;
-            height: 400px;
-            background: #0077b6;
-            top: -100px;
-            left: -100px;
-            opacity: 0.2;
-        }
-        .orb-2 {
-            width: 450px;
-            height: 450px;
-            background: #03045e;
-            bottom: -120px;
-            right: -120px;
-            opacity: 0.35;
-        }
+        .orb-1 { width: 400px; height: 400px; background: #0077b6; top: -100px; left: -100px; opacity: 0.2; }
+        .orb-2 { width: 450px; height: 450px; background: #03045e; bottom: -120px; right: -120px; opacity: 0.35; }
 
         .portal-container {
             position: relative;
@@ -70,7 +56,6 @@
             overflow: hidden;
         }
 
-        /* --- MÀN HÌNH ĐĂNG NHẬP --- */
         #login-card {
             max-width: 440px;
             margin: 0 auto;
@@ -180,6 +165,18 @@
             box-shadow: 0 15px 30px rgba(0, 180, 216, 0.45);
         }
 
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #94a3b8;
+            margin-top: 8px;
+            font-size: 13px;
+            padding: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+        }
+
         #status-msg {
             margin-top: 18px;
             font-size: 13px;
@@ -188,270 +185,37 @@
             line-height: 1.4;
         }
 
-        /* --- DASHBOARD SỰ KIỆN --- */
-        #dashboard-container {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
+        /* DASHBOARD */
+        #dashboard-container { display: flex; flex-direction: column; gap: 20px; }
+        .user-header-bar { display: flex; justify-content: space-between; align-items: center; padding: 15px 25px; background: rgba(39, 42, 51, 0.9); border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.1); }
+        .user-info { display: flex; align-items: center; gap: 12px; }
+        .user-avatar-icon { width: 42px; height: 42px; border-radius: 50%; background: linear-gradient(135deg, #0077b6, #00b4d8); display: flex; align-items: center; justify-content: center; font-size: 18px; }
+        .btn-logout-sm { padding: 8px 16px; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); color: #ef4444; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 13px; }
+        
+        .ticket-card { display: grid; grid-template-columns: 38% 62%; background: #272a33; border-radius: 16px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.1); }
+        .ticket-left { padding: 22px 20px; display: flex; flex-direction: column; justify-content: space-between; position: relative; border-right: 2px dashed rgba(255, 255, 255, 0.25); }
+        .ticket-title { font-size: 14px; font-weight: 800; color: #fff; text-transform: uppercase; margin-bottom: 14px; }
+        .ticket-meta { display: flex; flex-direction: column; gap: 8px; font-size: 13px; margin-bottom: 15px; }
+        .meta-item { display: flex; align-items: flex-start; gap: 8px; color: #38bdf8; font-weight: 600; }
+        .ticket-divider { height: 1px; background: rgba(255, 255, 255, 0.12); margin: 10px 0 12px 0; }
+        .price-value { font-size: 20px; font-weight: 800; color: #38bdf8; }
+        .btn-status { width: 100%; padding: 10px; background: #1d2027; color: #727a8c; border: none; border-radius: 8px; font-weight: 700; font-size: 13px; }
+        .ticket-right { aspect-ratio: 16 / 9; background: #181a20; }
+        .ticket-right img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .intro-card { background: #272a33; border-radius: 16px; padding: 28px; border: 1px solid rgba(255, 255, 255, 0.1); }
+        .intro-title { font-size: 22px; font-weight: 700; color: #38bdf8; margin-bottom: 16px; }
+        .intro-text { color: #d1d5db; font-size: 14px; line-height: 1.6; margin-bottom: 18px; }
+        .checklist-list { list-style: none; margin: 12px 0 18px 0; display: flex; flex-direction: column; gap: 8px; }
+        .checklist-list li { display: flex; align-items: center; gap: 10px; color: #e5e7eb; font-size: 14px; }
+        .checklist-list li i { color: #38bdf8; }
+        .banner-bottom img { width: 100%; border-radius: 12px; margin-top: 20px; }
 
-        .user-header-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 25px;
-            background: rgba(39, 42, 51, 0.9);
-            border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .user-avatar-icon {
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #0077b6, #00b4d8);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-        }
-
-        .user-details {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .btn-logout-sm {
-            padding: 8px 16px;
-            background: rgba(239, 68, 68, 0.15);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            color: #ef4444;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 13px;
-            transition: all 0.3s ease;
-        }
-
-        .btn-logout-sm:hover {
-            background: #ef4444;
-            color: #fff;
-        }
-
-        /* KHUNG VÉ SỰ KIỆN */
-        .ticket-card {
-            display: grid;
-            grid-template-columns: 38% 62%;
-            position: relative;
-            background: #272a33;
-            border-radius: 16px;
-            overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
-        }
-
-        .ticket-left {
-            padding: 22px 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            position: relative;
-            background: #272a33;
-            border-right: 2px dashed rgba(255, 255, 255, 0.25);
-            z-index: 2;
-        }
-
-        .ticket-notch-top, .ticket-notch-bottom {
-            position: absolute;
-            width: 24px;
-            height: 24px;
-            background: #08090d;
-            border-radius: 50%;
-            z-index: 10;
-            right: -12px;
-        }
-        .ticket-notch-top { top: -12px; }
-        .ticket-notch-bottom { bottom: -12px; }
-
-        .ticket-title {
-            font-size: 14px;
-            font-weight: 800;
-            line-height: 1.35;
-            color: #ffffff;
-            text-transform: uppercase;
-            margin-bottom: 14px;
-        }
-
-        .ticket-meta {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            font-size: 13px;
-            margin-bottom: 15px;
-        }
-
-        .meta-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 8px;
-            color: #38bdf8;
-            font-weight: 600;
-        }
-
-        .meta-item i {
-            margin-top: 3px;
-            font-size: 14px;
-        }
-
-        .meta-sub {
-            color: #8a93a6;
-            font-size: 11px;
-            font-weight: 400;
-            display: block;
-            margin-top: 1px;
-        }
-
-        .ticket-divider {
-            height: 1px;
-            background: rgba(255, 255, 255, 0.12);
-            margin: 10px 0 12px 0;
-        }
-
-        .price-section {
-            display: flex;
-            align-items: baseline;
-            gap: 8px;
-            margin-bottom: 10px;
-        }
-
-        .price-label {
-            font-size: 14px;
-            color: #a0a5b5;
-        }
-
-        .price-value {
-            font-size: 20px;
-            font-weight: 800;
-            color: #38bdf8;
-        }
-
-        .btn-status {
-            width: 100%;
-            padding: 10px;
-            background: #1d2027;
-            color: #727a8c;
-            border: none;
-            border-radius: 8px;
-            font-weight: 700;
-            font-size: 13px;
-            cursor: not-allowed;
-            text-align: center;
-        }
-
-        .ticket-right {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            aspect-ratio: 16 / 9;
-            background: #181a20;
-            overflow: hidden;
-        }
-
-        .ticket-right img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
-        .intro-card {
-            background: #272a33;
-            border-radius: 16px;
-            padding: 28px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
-        }
-
-        .intro-title {
-            font-size: 22px;
-            font-weight: 700;
-            color: #38bdf8;
-            margin-bottom: 16px;
-        }
-
-        .intro-text {
-            color: #d1d5db;
-            font-size: 14px;
-            line-height: 1.6;
-            margin-bottom: 18px;
-        }
-
-        .event-highlight-box {
-            margin-bottom: 18px;
-            color: #d1d5db;
-            font-size: 14px;
-            line-height: 1.8;
-        }
-
-        .checklist-list {
-            list-style: none;
-            margin: 12px 0 18px 0;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .checklist-list li {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: #e5e7eb;
-            font-size: 14px;
-        }
-
-        .checklist-list li i {
-            color: #38bdf8;
-        }
-
-        .banner-bottom {
-            width: 100%;
-            border-radius: 12px;
-            overflow: hidden;
-            margin-top: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .banner-bottom img {
-            width: 100%;
-            height: auto;
-            display: block;
-            object-fit: cover;
-        }
-
-        .hidden {
-            display: none !important;
-        }
+        .hidden { display: none !important; }
 
         @media (max-width: 768px) {
-            .ticket-card {
-                grid-template-columns: 1fr;
-            }
-            .ticket-left {
-                border-right: none;
-                border-bottom: 2px dashed rgba(255, 255, 255, 0.25);
-            }
-            .ticket-notch-top, .ticket-notch-bottom {
-                display: none;
-            }
-            .ticket-right {
-                aspect-ratio: 16 / 9;
-            }
+            .ticket-card { grid-template-columns: 1fr; }
+            .ticket-left { border-right: none; border-bottom: 2px dashed rgba(255, 255, 255, 0.25); }
         }
     </style>
 </head>
@@ -462,130 +226,118 @@
 
     <div class="portal-container">
         
-        <!-- MÀN HÌNH ĐĂNG NHẬP -->
         <div class="glass-card" id="login-card">
             <div class="brand-icon">
-                <i class="fa-solid fa-gamepad"></i>
+                <i class="fa-solid fa-shield-halved"></i>
             </div>
-            <h2 class="title-login">MTDS CONNECT</h2>
-            <p class="subtitle">Đăng nhập thông tin để nhận vé tham gia sự kiện</p>
+            <h2 class="title-login" id="card-title">XÁC THỰC EMAIL</h2>
+            <p class="subtitle" id="card-subtitle">Mã OTP sẽ được gửi trực tiếp đến Email thật của bạn</p>
 
-            <div class="input-box">
-                <label>Tên người dùng (Username Roblox)</label>
-                <div class="input-wrapper">
-                    <input type="text" id="roblox-username" placeholder="Nhập tên Roblox của bạn" autocomplete="off">
-                    <i class="fa-solid fa-user"></i>
+            <div id="step-1-form">
+                <div class="input-box">
+                    <label>Tên người dùng (Username)</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="roblox-username" placeholder="Nhập tên người dùng..." autocomplete="off">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
                 </div>
-            </div>
 
-            <div class="input-box">
-                <label>Địa chỉ Email</label>
-                <div class="input-wrapper">
-                    <input type="email" id="user-email" placeholder="Nhập địa chỉ email" autocomplete="off">
-                    <i class="fa-solid fa-envelope"></i>
+                <div class="input-box">
+                    <label>Địa chỉ Email (Thật 100%)</label>
+                    <div class="input-wrapper">
+                        <input type="email" id="user-email" placeholder="Nhập email để nhận OTP..." autocomplete="off">
+                        <i class="fa-solid fa-envelope"></i>
+                    </div>
                 </div>
+
+                <button class="btn-action" id="btn-send-otp" onclick="sendOTP()">
+                    <span>GỬI MÃ OTP</span>
+                    <i class="fa-solid fa-paper-plane"></i>
+                </button>
             </div>
 
-            <button class="btn-action" id="btn-submit" onclick="login()">
-                <span>KẾT NỐI NGAY</span>
-                <i class="fa-solid fa-arrow-right"></i>
-            </button>
+            <div id="step-2-form" class="hidden">
+                <div class="input-box">
+                    <label>Nhập mã OTP (6 chữ số)</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="otp-input" maxlength="6" placeholder="______" style="letter-spacing: 6px; text-align: center; font-size: 18px; font-weight: 700;">
+                        <i class="fa-solid fa-key"></i>
+                    </div>
+                </div>
+
+                <button class="btn-action" onclick="verifyOTP()">
+                    <span>XÁC NHẬN OTP</span>
+                    <i class="fa-solid fa-check-circle"></i>
+                </button>
+
+                <button class="btn-secondary" onclick="resetForm()">
+                    <i class="fa-solid fa-arrow-left"></i> Nhập lại Email
+                </button>
+            </div>
 
             <div id="status-msg"></div>
         </div>
 
-        <!-- MÀN HÌNH SỰ KIỆN & VÉ -->
         <div id="dashboard-container" class="hidden">
-            
             <div class="user-header-bar">
                 <div class="user-info">
                     <div class="user-avatar-icon"><i class="fa-solid fa-user"></i></div>
-                    <div class="user-details">
+                    <div>
                         <div style="font-weight: 700; font-size: 15px;" id="welcome-username">Username</div>
                         <div style="color: #38bdf8; font-size: 12px;" id="welcome-email"><i class="fa-solid fa-envelope"></i> email@example.com</div>
                     </div>
                 </div>
-                <button class="btn-logout-sm" onclick="logout()">
-                    <i class="fa-solid fa-power-off"></i> Đăng xuất
-                </button>
+                <button class="btn-logout-sm" onclick="logout()"><i class="fa-solid fa-power-off"></i> Đăng xuất</button>
             </div>
 
-            <!-- VÉ SỰ KIỆN -->
             <div class="ticket-card">
                 <div class="ticket-left">
-                    <div class="ticket-notch-top"></div>
-                    <div class="ticket-notch-bottom"></div>
-
-                    <div>
-                        <div class="ticket-title">
-                            CHƯƠNG TRÌNH CHÍNH LUẬN - NGHỆ THUẬT ÁNH SÁNG HÀO KHÍ THÁNG TÁM | LOTUSENM X MTDS THE EVENT
-                        </div>
-                        
-                        <div class="ticket-meta">
-                            <div class="meta-item">
-                                <i class="fa-regular fa-calendar-days"></i>
-                                <span>20:00 - 23:00, 31 Tháng 8, 2025</span>
-                            </div>
-                            <div class="meta-item">
-                                <i class="fa-solid fa-location-dot"></i>
-                                <div>
-                                    <span>Sân Vận Động Quốc Gia Mỹ Đình</span>
-                                    <span class="meta-sub">Giá Nhập Trong Nền Tảng Roblox</span>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="ticket-title">CHƯƠNG TRÌNH CHÍNH LUẬN - NGHỆ THUẬT ÁNH SÁNG HÀO KHÍ THÁNG TÁM | LOTUSENM X MTDS THE EVENT</div>
+                    <div class="ticket-meta">
+                        <div class="meta-item"><i class="fa-regular fa-calendar-days"></i> <span>20:00 - 23:00, 31 Tháng 8, 2025</span></div>
+                        <div class="meta-item"><i class="fa-solid fa-location-dot"></i> <span>Sân Vận Động Quốc Gia Mỹ Đình (Roblox)</span></div>
                     </div>
-
                     <div>
                         <div class="ticket-divider"></div>
-                        <div class="price-section">
-                            <span class="price-label">Giá từ</span>
-                            <span class="price-value">0 ROBUX</span>
-                        </div>
+                        <div class="price-value">0 ROBUX</div>
                         <button class="btn-status" disabled>Sự kiện đã kết thúc</button>
                     </div>
                 </div>
-
                 <div class="ticket-right">
-                    <img src="./CHUONG_TRINH_NGHE_THUAT_ANH_SANG_CHAO_MUNG_KY_NIEM_50_NAM_Ngay_Giai_phong_Mien_Nam_thong_nhat_at_nuoc_3041975_-_3042025_3.png" alt="Poster Hào Khí Tháng Tám">
+                    <img src="./CHUONG_TRINH_NGHE_THUAT_ANH_SANG_CHAO_MUNG_KY_NIEM_50_NAM_Ngay_Giai_phong_Mien_Nam_thong_nhat_at_nuoc_3041975_-_3042025_3.png" alt="Poster">
                 </div>
             </div>
 
-            <!-- NỘI DUNG GIỚI THIỆU -->
             <div class="intro-card">
                 <h3 class="intro-title">Giới thiệu</h3>
-                
-                <p class="intro-text">
-                    Xin chào và cảm ơn bạn đã đăng ký tham gia chương trình Chính luận – Nghệ thuật ánh sáng <strong>"Hào khí Tháng Tám"</strong>, tái hiện lại hành trình 80 năm Cách mạng Tháng Tám và Quốc khánh 2/9 bằng công nghệ hiện đại trên nền tảng ROBLOX.
-                </p>
-
-                <div class="event-highlight-box">
-                    <p>📅 <strong>Sự kiện sẽ diễn ra lúc:</strong> 20:00, Chủ nhật, ngày 31/8/2025</p>
-                    <p>📍 <strong>Địa điểm:</strong> Sân vận động Quốc gia Mỹ Đình – mô phỏng 3D trên ROBLOX</p>
-                </div>
-
-                <p style="color: #e5e7eb; font-weight: 600; font-size: 14px;">Trong máy chủ này, bạn sẽ:</p>
+                <p class="intro-text">Xin chào và cảm ơn bạn đã đăng ký tham gia chương trình Chính luận – Nghệ thuật ánh sáng <strong>"Hào khí Tháng Tám"</strong>.</p>
                 <ul class="checklist-list">
-                    <li><i class="fa-solid fa-check"></i> Nhận thông báo và hướng dẫn chính thức từ Ban Tổ chức</li>
-                    <li><i class="fa-solid fa-check"></i> Được hỗ trợ kỹ thuật, giải đáp thắc mắc trước và trong buổi diễn</li>
-                    <li><i class="fa-solid fa-check"></i> Cập nhật trước những hình ảnh hậu trường, trailer độc quyền</li>
+                    <li><i class="fa-solid fa-check"></i> Xác minh Email thành công</li>
+                    <li><i class="fa-solid fa-check"></i> Nhận thông báo từ BTC</li>
                 </ul>
-
-                <p class="intro-text">
-                    Một lần nữa, chào mừng bạn đến với không gian cộng đồng của "Hào khí Tháng Tám". Cảm ơn vì đã đồng hành cùng chúng tôi trên hành trình tri ân lịch sử và truyền cảm hứng dựng xây tương lai!
-                </p>
-
                 <div class="banner-bottom">
-                    <img src="./CHAO_MUNG_QUY_KHAN_GIA_1.png" alt="Cảm ơn vì đã đến">
+                    <img src="./CHAO_MUNG_QUY_KHAN_GIA_1.png" alt="Cảm ơn">
                 </div>
             </div>
-
         </div>
 
     </div>
 
     <script>
-        // Tự động kiểm tra nếu đã từng đăng nhập
+        // Thông số cấu hình EmailJS
+        const EMAILJS_PUBLIC_KEY = "b2GlPCwH-PmpkEM09";
+        const EMAILJS_SERVICE_ID = "service_3mtds6";
+        const EMAILJS_TEMPLATE_ID = "template_f5ibhzp";
+
+        // Khởi tạo SDK EmailJS
+        (function() {
+            emailjs.init(EMAILJS_PUBLIC_KEY);
+        })();
+
+        let generatedOTP = null;
+        let tempUser = "";
+        let tempEmail = "";
+
         window.onload = function() {
             const savedUser = localStorage.getItem("robloxUser");
             const savedEmail = localStorage.getItem("robloxEmail");
@@ -594,47 +346,88 @@
             }
         };
 
-        // Biểu thức chính quy (Regex) kiểm tra chuẩn cấu trúc Email
         function validateEmail(email) {
-            const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-            return regex.test(email);
+            return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
         }
 
-        function login() {
-            const usernameInput = document.getElementById('roblox-username').value.trim();
-            const emailInput = document.getElementById('user-email').value.trim();
+        // 1. Gửi mã OTP đến Email
+        function sendOTP() {
+            const username = document.getElementById('roblox-username').value.trim();
+            const email = document.getElementById('user-email').value.trim();
+            const msg = document.getElementById('status-msg');
+            const btnSend = document.getElementById('btn-send-otp');
+
+            if (!username || !email) {
+                msg.style.color = "#ef4444";
+                msg.innerHTML = "<i class='fa-solid fa-triangle-exclamation'></i> Vui lòng điền đủ thông tin!";
+                return;
+            }
+
+            if (!validateEmail(email)) {
+                msg.style.color = "#ef4444";
+                msg.innerHTML = "<i class='fa-solid fa-circle-exclamation'></i> Email sai định dạng!";
+                return;
+            }
+
+            // Tạo mã OTP ngẫu nhiên 6 chữ số
+            generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
+            tempUser = username;
+            tempEmail = email;
+
+            msg.style.color = "#38bdf8";
+            msg.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> Đang gửi mã OTP đến Email...";
+            btnSend.disabled = true;
+
+            // Gửi email qua EmailJS API
+            emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+                to_email: email,
+                to_name: username,
+                otp_code: generatedOTP
+            })
+            .then(() => {
+                msg.style.color = "#10b981";
+                msg.innerHTML = "<i class='fa-solid fa-paper-plane'></i> Đã gửi OTP thành công! Vui lòng kiểm tra hộp thư.";
+                
+                // Chuyển sang form nhập OTP
+                document.getElementById('step-1-form').classList.add('hidden');
+                document.getElementById('step-2-form').classList.remove('hidden');
+                document.getElementById('card-title').innerText = "NHẬP MÃ OTP";
+                document.getElementById('card-subtitle').innerText = `Mã xác nhận đã gửi đến ${email}`;
+            })
+            .catch((error) => {
+                btnSend.disabled = false;
+                msg.style.color = "#ef4444";
+                msg.innerHTML = "<i class='fa-solid fa-circle-xmark'></i> Không thể gửi Email. Lỗi: " + JSON.stringify(error);
+            });
+        }
+
+        // 2. Xác nhận mã OTP
+        function verifyOTP() {
+            const userOTP = document.getElementById('otp-input').value.trim();
             const msg = document.getElementById('status-msg');
 
-            // 1. Kiểm tra Username không được để trống
-            if (!usernameInput) {
+            if (userOTP === generatedOTP) {
+                msg.style.color = "#10b981";
+                msg.innerHTML = "<i class='fa-solid fa-circle-check'></i> Xác minh thành công!";
+
+                setTimeout(() => {
+                    localStorage.setItem("robloxUser", tempUser);
+                    localStorage.setItem("robloxEmail", tempEmail);
+                    renderDashboard(tempUser, tempEmail);
+                }, 800);
+            } else {
                 msg.style.color = "#ef4444";
-                msg.innerHTML = "<i class='fa-solid fa-circle-exclamation'></i> Vui lòng nhập Username!";
-                return;
+                msg.innerHTML = "<i class='fa-solid fa-circle-xmark'></i> Mã OTP không chính xác. Vui lòng thử lại!";
             }
+        }
 
-            // 2. Kiểm tra Email không được để trống
-            if (!emailInput) {
-                msg.style.color = "#ef4444";
-                msg.innerHTML = "<i class='fa-solid fa-circle-exclamation'></i> Vui lòng nhập Email!";
-                return;
-            }
-
-            // 3. Kiểm tra tính hợp lệ của định dạng Email
-            if (!validateEmail(emailInput)) {
-                msg.style.color = "#ef4444";
-                msg.innerHTML = "<i class='fa-solid fa-triangle-exclamation'></i> Email không đúng định dạng (ví dụ đúng: ten@gmail.com)!";
-                return;
-            }
-
-            // Xử lý đăng nhập thành công
-            msg.style.color = "#10b981";
-            msg.innerHTML = "<i class='fa-solid fa-circle-check'></i> Xác minh Email thành công! Đang vào hệ thống...";
-
-            setTimeout(() => {
-                localStorage.setItem("robloxUser", usernameInput);
-                localStorage.setItem("robloxEmail", emailInput);
-                renderDashboard(usernameInput, emailInput);
-            }, 800);
+        function resetForm() {
+            document.getElementById('step-2-form').classList.add('hidden');
+            document.getElementById('step-1-form').classList.remove('hidden');
+            document.getElementById('btn-send-otp').disabled = false;
+            document.getElementById('card-title').innerText = "XÁC THỰC EMAIL";
+            document.getElementById('card-subtitle').innerText = "Mã OTP sẽ được gửi trực tiếp đến Email thật của bạn";
+            document.getElementById('status-msg').innerText = "";
         }
 
         function renderDashboard(username, email) {
@@ -647,26 +440,10 @@
         function logout() {
             localStorage.removeItem("robloxUser");
             localStorage.removeItem("robloxEmail");
-            document.getElementById('roblox-username').value = "";
-            document.getElementById('user-email').value = "";
-            document.getElementById('status-msg').innerText = "";
+            resetForm();
             document.getElementById('dashboard-container').classList.add('hidden');
             document.getElementById('login-card').classList.remove('hidden');
         }
-
-        // Cho phép nhấn Enter để đăng nhập
-        document.getElementById("user-email").addEventListener("keypress", function(event) {
-            if (event.key === "Enter") {
-                event.preventDefault();
-                login();
-            }
-        });
-        document.getElementById("roblox-username").addEventListener("keypress", function(event) {
-            if (event.key === "Enter") {
-                event.preventDefault();
-                login();
-            }
-        });
     </script>
 </body>
 </html>
