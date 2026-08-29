@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MTDS THE TICKET - OTP Verification</title>
+    <title>MTDS THE TICKET</title>
+    <!-- Google Fonts & FontAwesome Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <!-- SDK EmailJS -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
     <style>
@@ -226,6 +228,7 @@
 
     <div class="portal-container">
         
+        <!-- MÀN HÌNH ĐĂNG NHẬP / XÁC THỰC -->
         <div class="glass-card" id="login-card">
             <div class="brand-icon">
                 <i class="fa-solid fa-shield-halved"></i>
@@ -233,6 +236,7 @@
             <h2 class="title-login" id="card-title">XÁC THỰC EMAIL</h2>
             <p class="subtitle" id="card-subtitle">Mã OTP sẽ được gửi trực tiếp đến Email thật của bạn</p>
 
+            <!-- BƯỚC 1: NHẬP THÔNG TIN -->
             <div id="step-1-form">
                 <div class="input-box">
                     <label>Tên người dùng (Username)</label>
@@ -256,6 +260,7 @@
                 </button>
             </div>
 
+            <!-- BƯỚC 2: NHẬP MÃ OTP -->
             <div id="step-2-form" class="hidden">
                 <div class="input-box">
                     <label>Nhập mã OTP (6 chữ số)</label>
@@ -278,6 +283,7 @@
             <div id="status-msg"></div>
         </div>
 
+        <!-- MÀN HÌNH DASHBOARD VÉ -->
         <div id="dashboard-container" class="hidden">
             <div class="user-header-bar">
                 <div class="user-info">
@@ -378,12 +384,19 @@
             msg.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> Đang gửi mã OTP đến Email...";
             btnSend.disabled = true;
 
-            // Gửi email qua EmailJS API
-            emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+            // Truyền nhiều tên biến phổ biến để đảm bảo khớp với ô "To Email" trên Template
+            const templateParams = {
                 to_email: email,
+                user_email: email,
+                email: email,
                 to_name: username,
-                otp_code: generatedOTP
-            })
+                user_name: username,
+                otp_code: generatedOTP,
+                reply_to: email
+            };
+
+            // Gửi email qua EmailJS API
+            emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
             .then(() => {
                 msg.style.color = "#10b981";
                 msg.innerHTML = "<i class='fa-solid fa-paper-plane'></i> Đã gửi OTP thành công! Vui lòng kiểm tra hộp thư.";
