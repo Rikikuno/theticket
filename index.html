@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MTDS THE TICKET - OTP Verification</title>
+    <title>MTDS THE TICKET</title>
     <!-- Google Fonts & FontAwesome Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -142,7 +142,7 @@
             box-shadow: 0 0 15px rgba(0, 180, 216, 0.35);
         }
 
-        /* --- THIẾT KẾ 6 Ô VUÔNG OTP VỚI VIỀN XOAY --- */
+        /* --- THIẾT KẾ 6 Ô VUÔNG OTP --- */
         .otp-container {
             display: flex;
             gap: 10px;
@@ -164,7 +164,6 @@
             transition: all 0.3s ease;
         }
 
-        /* Lớp nền viền xoay */
         .otp-box-wrapper::before {
             content: '';
             position: absolute;
@@ -176,7 +175,6 @@
             transition: opacity 0.3s ease;
         }
 
-        /* Lớp che bên trong giữ màu tối */
         .otp-box-wrapper::after {
             content: '';
             position: absolute;
@@ -201,19 +199,19 @@
             caret-color: #00b4d8;
         }
 
-        /* Trạng thái 1: Khi focus */
+        /* Trạng thái 1: Focus */
         .otp-box-wrapper.focused::before {
             opacity: 1;
         }
 
-        /* Trạng thái 2: Đang tự động kiểm tra OTP */
+        /* Trạng thái 2: Đang tự động kiểm tra */
         .otp-box-wrapper.verifying::before {
             opacity: 1;
             animation-duration: 0.8s;
             background: conic-gradient(from 0deg, transparent 0 220deg, #00b4d8 360deg);
         }
 
-        /* Trạng thái 3: Nhập Sai (Lỗi + Shake) */
+        /* Trạng thái 3: Nhập Sai (Viền đỏ + Rung) */
         .otp-box-wrapper.error::before {
             opacity: 1;
             background: conic-gradient(from 0deg, transparent 0 220deg, #ef4444 360deg);
@@ -224,7 +222,7 @@
             box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
         }
 
-        /* Trạng thái 4: Nhập Đúng (Thành công) */
+        /* Trạng thái 4: Nhập Đúng */
         .otp-box-wrapper.success::before {
             opacity: 1;
             background: conic-gradient(from 0deg, transparent 0 220deg, #10b981 360deg);
@@ -234,13 +232,11 @@
             box-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
         }
 
-        /* Animation Xoay viền */
         @keyframes rotateBorder {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
 
-        /* Animation Rung lắc khi sai */
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
             20%, 60% { transform: translateX(-6px); }
@@ -450,7 +446,7 @@
         let generatedOTP = null;
         let tempUser = "";
         let tempEmail = "";
-        let isVerifying = false; // Cờ chặn gửi trùng lặp khi đang tự động kiểm tra
+        let isVerifying = false;
 
         const otpInputs = document.querySelectorAll('.otp-box');
         const otpWrappers = document.querySelectorAll('.otp-box-wrapper');
@@ -464,21 +460,18 @@
             }
         };
 
-        // --- TƯƠNG TÁC TỰ ĐỘNG CỦA 6 Ô VUÔNG OTP ---
+        // --- TƯƠNG TÁC CỦA 6 Ô VUÔNG OTP ---
         function setupOtpEvents() {
             otpInputs.forEach((input, index) => {
-                // Focus -> Hiện hiệu ứng xoay
                 input.addEventListener('focus', () => {
                     clearOtpEffects();
                     otpWrappers[index].classList.add('focused');
                 });
 
-                // Blur -> Tắt hiệu ứng
                 input.addEventListener('blur', () => {
                     otpWrappers[index].classList.remove('focused');
                 });
 
-                // Gõ phím -> Nhảy ô và TỰ ĐỘNG XÁC NHẬN khi gõ đủ 6 số
                 input.addEventListener('input', (e) => {
                     clearOtpEffects();
                     const val = e.target.value.replace(/[^0-9]/g, '');
@@ -488,13 +481,11 @@
                         otpInputs[index + 1].focus();
                     }
 
-                    // TỰ ĐỘNG XÁC NHẬN KHI ĐỦ 6 SỐ
                     if (getFullOTP().length === 6 && !isVerifying) {
                         autoVerifyOTP();
                     }
                 });
 
-                // Backspace -> Lùi ô
                 input.addEventListener('keydown', (e) => {
                     clearOtpEffects();
                     if (e.key === 'Backspace' && !input.value && index > 0) {
@@ -502,7 +493,6 @@
                     }
                 });
 
-                // Dán (Paste) -> TỰ ĐỘNG XÁC NHẬN
                 input.addEventListener('paste', (e) => {
                     e.preventDefault();
                     clearOtpEffects();
@@ -514,7 +504,6 @@
                         const focusIdx = Math.min(pasteData.length, otpInputs.length - 1);
                         otpInputs[focusIdx].focus();
 
-                        // TỰ ĐỘNG XÁC NHẬN
                         if (getFullOTP().length === 6 && !isVerifying) {
                             autoVerifyOTP();
                         }
@@ -523,14 +512,12 @@
             });
         }
 
-        // Lấy chuỗi 6 số
         function getFullOTP() {
             let code = '';
             otpInputs.forEach(input => code += input.value.trim());
             return code;
         }
 
-        // Xóa các trạng thái hiệu ứng
         function clearOtpEffects() {
             otpWrappers.forEach(w => {
                 w.classList.remove('error', 'success', 'verifying');
@@ -597,7 +584,7 @@
             });
         }
 
-        // 2. HÀM TỰ ĐỘNG XÁC THỰC OTP KHI NHẬP ĐỦ 6 SỐ
+        // 2. TỰ ĐỘNG XÁC THỰC OTP KHI ĐỦ 6 SỐ
         function autoVerifyOTP() {
             if (isVerifying) return;
             isVerifying = true;
@@ -606,18 +593,16 @@
             const msg = document.getElementById('status-msg');
 
             clearOtpEffects();
-            // Bật hiệu ứng viền xoay cho cả 6 ô
             otpWrappers.forEach(w => w.classList.add('verifying'));
             
             msg.style.color = "#38bdf8";
             msg.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> Đang kiểm tra mã OTP...";
 
-            // Chờ 0.8 giây tạo hiệu ứng xoay chân thực
             setTimeout(() => {
                 otpWrappers.forEach(w => w.classList.remove('verifying'));
 
                 if (userOTP === generatedOTP) {
-                    // ĐÚNG OTP: Hiện viền xanh lá sáng
+                    // ĐÚNG OTP
                     otpWrappers.forEach(w => w.classList.add('success'));
                     msg.style.color = "#10b981";
                     msg.innerHTML = "<i class='fa-solid fa-circle-check'></i> Mã OTP chính xác! Đang vào trang...";
@@ -629,11 +614,16 @@
                         isVerifying = false;
                     }, 600);
                 } else {
-                    // SAI OTP: Hiện viền đỏ + Rung lắc (Shake)
+                    // SAI OTP: Hiện viền đỏ + Rung lắc -> Xóa toàn bộ -> Đưa con trỏ về ô 1
                     otpWrappers.forEach(w => w.classList.add('error'));
                     msg.style.color = "#ef4444";
-                    msg.innerHTML = "<i class='fa-solid fa-circle-xmark'></i> Mã OTP không chính xác. Vui lòng thử lại!";
-                    isVerifying = false;
+                    msg.innerHTML = "<i class='fa-solid fa-circle-xmark'></i> Mã OTP không chính xác. Vui lòng nhập lại!";
+
+                    setTimeout(() => {
+                        otpInputs.forEach(input => input.value = '');
+                        otpInputs[0].focus();
+                        isVerifying = false;
+                    }, 400); // Đợi rung hết 0.4s rồi mới làm sạch ô nhập
                 }
             }, 800);
         }
