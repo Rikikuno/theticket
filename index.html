@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MTDS THE TICKET</title>
+    <title>MTDS THE TICKET - Hào Khí Tháng Tám</title>
     <!-- Google Fonts & FontAwesome Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
@@ -16,7 +16,7 @@
             font-family: 'Outfit', sans-serif;
         }
 
-        /* Nền Gradient động tông Dark Blue */
+        /* Nền Gradient động Dark Blue */
         body {
             min-height: 100vh;
             background: linear-gradient(-45deg, #03045e, #023e8a, #0077b6, #001233);
@@ -25,7 +25,8 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow: hidden;
+            padding: 20px;
+            color: #fff;
             position: relative;
         }
 
@@ -37,27 +38,28 @@
 
         /* Hiệu ứng Đèn Neon xanh mờ */
         .glow-orb {
-            position: absolute;
+            position: fixed;
             border-radius: 50%;
-            filter: blur(100px);
+            filter: blur(120px);
             z-index: 0;
+            pointer-events: none;
             animation: pulse 8s infinite alternate;
         }
         .orb-1 {
-            width: 400px;
-            height: 400px;
+            width: 450px;
+            height: 450px;
             background: #00b4d8;
             top: -100px;
             left: -100px;
-            opacity: 0.35;
+            opacity: 0.3;
         }
         .orb-2 {
-            width: 450px;
-            height: 450px;
+            width: 500px;
+            height: 500px;
             background: #03045e;
             bottom: -120px;
             right: -120px;
-            opacity: 0.6;
+            opacity: 0.5;
         }
 
         @keyframes pulse {
@@ -65,34 +67,35 @@
             100% { transform: scale(1.2) translate(30px, -30px); }
         }
 
-        /* Khung chứa chính */
+        /* Container điều hướng màn hình */
         .portal-container {
             position: relative;
             z-index: 10;
             width: 100%;
-            max-width: 420px;
-            padding: 20px;
+            max-width: 900px;
+            margin: auto;
         }
 
-        /* Phong cách Glassmorphism */
+        /* Card Glassmorphic */
         .glass-card {
-            background: rgba(10, 17, 40, 0.75);
+            background: rgba(10, 17, 40, 0.85);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 24px;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        /* --- MÀN HÌNH ĐĂNG NHẬP --- */
+        #login-card {
+            max-width: 420px;
+            margin: 0 auto;
             padding: 40px 30px;
             text-align: center;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        .glass-card:hover {
-            border-color: rgba(0, 180, 216, 0.4);
-            box-shadow: 0 20px 50px rgba(0, 119, 182, 0.3);
-        }
-
-        /* Logo Icon Dark Blue */
         .brand-icon {
             width: 70px;
             height: 70px;
@@ -107,15 +110,10 @@
             box-shadow: 0 10px 25px rgba(0, 119, 182, 0.4);
             border: 1px solid rgba(255, 255, 255, 0.1);
             transform: rotate(-5deg);
-            transition: transform 0.3s ease;
-        }
-        .glass-card:hover .brand-icon {
-            transform: rotate(0deg) scale(1.05);
         }
 
-        h2 {
-            color: #fff;
-            font-size: 26px;
+        h2.title-login {
+            font-size: 24px;
             font-weight: 800;
             letter-spacing: 1px;
             margin-bottom: 8px;
@@ -128,7 +126,6 @@
             margin-bottom: 30px;
         }
 
-        /* Ô nhập liệu */
         .input-box {
             position: relative;
             margin-bottom: 20px;
@@ -141,7 +138,6 @@
             transform: translateY(-50%);
             color: #64748b;
             font-size: 18px;
-            transition: color 0.3s;
         }
 
         .input-box input {
@@ -162,11 +158,6 @@
             box-shadow: 0 0 15px rgba(0, 180, 216, 0.35);
         }
 
-        .input-box input:focus + i {
-            color: #00b4d8;
-        }
-
-        /* Nút bấm Dark Blue Neon */
         .btn-action {
             width: 100%;
             padding: 16px;
@@ -176,7 +167,6 @@
             color: #fff;
             font-size: 16px;
             font-weight: 700;
-            letter-spacing: 1px;
             cursor: pointer;
             transition: all 0.3s ease;
             box-shadow: 0 10px 25px rgba(0, 119, 182, 0.35);
@@ -187,7 +177,7 @@
         }
 
         .btn-action:hover {
-            transform: translateY(-3px);
+            transform: translateY(-2px);
             background: linear-gradient(135deg, #0096c7, #0077b6);
             box-shadow: 0 15px 30px rgba(0, 180, 216, 0.45);
         }
@@ -199,33 +189,257 @@
             min-height: 20px;
         }
 
-        .user-tag {
-            display: inline-block;
-            background: rgba(0, 180, 216, 0.15);
-            color: #38bdf8;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 25px;
-            border: 1px solid rgba(0, 180, 216, 0.3);
+        /* --- MÀN HÌNH SỰ KIỆN (DASHBOARD) --- */
+        #dashboard-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
 
-        .btn-logout {
-            background: rgba(255, 255, 255, 0.05);
+        /* Thanh điều hướng người dùng phía trên */
+        .user-header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 25px;
+            background: rgba(10, 17, 40, 0.6);
+            border-radius: 16px;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #ef4444;
-            box-shadow: none;
         }
 
-        .btn-logout:hover {
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #0077b6, #00b4d8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .btn-logout-sm {
+            padding: 8px 16px;
             background: rgba(239, 68, 68, 0.15);
-            border-color: rgba(239, 68, 68, 0.4);
-            box-shadow: 0 10px 20px rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #ef4444;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-logout-sm:hover {
+            background: #ef4444;
+            color: #fff;
+        }
+
+        /* TICKET SHAPE CARD (KHUNG VÉ SỰ KIỆN) */
+        .ticket-card {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            position: relative;
+            background: #2b2e38;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .ticket-left {
+            padding: 30px 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            background: #232630;
+        }
+
+        .ticket-title {
+            font-size: 16px;
+            font-weight: 800;
+            line-height: 1.4;
+            color: #ffffff;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        .ticket-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            color: #38bdf8;
+            font-weight: 600;
+        }
+
+        .meta-item i {
+            margin-top: 3px;
+            font-size: 15px;
+        }
+
+        .meta-sub {
+            color: #8a93a6;
+            font-size: 12px;
+            font-weight: 400;
+            display: block;
+            margin-top: 2px;
+        }
+
+        .ticket-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .price-section {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .price-label {
+            font-size: 15px;
+            color: #a0a5b5;
+        }
+
+        .price-value {
+            font-size: 22px;
+            font-weight: 800;
+            color: #3b82f6;
+        }
+
+        .btn-status {
+            width: 100%;
+            padding: 12px;
+            background: #3b3e4a;
+            color: #8b92a5;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: not-allowed;
+            text-align: center;
+        }
+
+        .ticket-right {
+            position: relative;
+            min-height: 250px;
+            background: #181a20;
+        }
+
+        .ticket-right img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* Vết khuyết bánh xe vé (Notch cutouts) */
+        .ticket-notch-top, .ticket-notch-bottom {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            background: #08090d; /* Khớp với màu trang ngoài */
+            border-radius: 50%;
+            z-index: 5;
+            left: calc(45.45% - 12px); /* Căn đúng đường chia */
+        }
+        .ticket-notch-top { top: -12px; }
+        .ticket-notch-bottom { bottom: -12px; }
+
+        /* KHUNG GIỚI THIỆU SỰ KIỆN */
+        .intro-card {
+            background: #232630;
+            border-radius: 16px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .intro-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #38bdf8;
+            margin-bottom: 18px;
+        }
+
+        .intro-text {
+            color: #d1d5db;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .event-highlight-box {
+            margin-bottom: 20px;
+            color: #d1d5db;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .checklist-list {
+            list-style: none;
+            margin: 15px 0 20px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .checklist-list li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #e5e7eb;
+            font-size: 14px;
+        }
+
+        .checklist-list li i {
+            color: #38bdf8;
+        }
+
+        .banner-bottom {
+            width: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-top: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .banner-bottom img {
+            width: 100%;
+            height: auto;
+            display: block;
         }
 
         .hidden {
             display: none !important;
+        }
+
+        /* Responsive cho Mobile */
+        @media (max-width: 768px) {
+            .ticket-card {
+                grid-template-columns: 1fr;
+            }
+            .ticket-notch-top, .ticket-notch-bottom {
+                display: none;
+            }
+            .ticket-right {
+                height: 200px;
+            }
         }
     </style>
 </head>
@@ -236,12 +450,12 @@
 
     <div class="portal-container">
         
-        <!-- FORM ĐĂNG NHẬP -->
+        <!-- 1. MÀN HÌNH ĐĂNG NHẬP -->
         <div class="glass-card" id="login-card">
             <div class="brand-icon">
                 <i class="fa-solid fa-gamepad"></i>
             </div>
-            <h2>ROBLOX CONNECT</h2>
+            <h2 class="title-login">ROBLOX CONNECT</h2>
             <p class="subtitle">Nhập Username để kết nối tài khoản</p>
 
             <div class="input-box">
@@ -257,27 +471,99 @@
             <div id="status-msg"></div>
         </div>
 
-        <!-- MÀN HÌNH HIỂN THỊ THÔNG TIN ĐÃ XÁC NHẬN -->
-        <div class="glass-card hidden" id="dashboard-card">
-            <div class="brand-icon">
-                <i class="fa-solid fa-user-check"></i>
+        <!-- 2. MÀN HÌNH CHI TIẾT SỰ KIỆN VÀ VÉ (SAU KHỊ KẾT NỐI) -->
+        <div id="dashboard-container" class="hidden">
+            
+            <!-- Header bar -->
+            <div class="user-header-bar">
+                <div class="user-info">
+                    <div class="user-avatar-icon"><i class="fa-solid fa-user"></i></div>
+                    <div>
+                        <div style="font-weight: 700; font-size: 15px;" id="welcome-username">Username</div>
+                        <div style="color: #10b981; font-size: 12px;"><i class="fa-solid fa-circle-check"></i> Đã kết nối Roblox</div>
+                    </div>
+                </div>
+                <button class="btn-logout-sm" onclick="logout()">
+                    <i class="fa-solid fa-power-off"></i> Đăng xuất
+                </button>
             </div>
-            
-            <h2 id="welcome-username">Username</h2>
-            <p id="display-name" style="color: #94a3b8; font-size: 14px; margin-top: -5px; margin-bottom: 15px;"></p>
-            
-            <div class="user-tag"><i class="fa-solid fa-circle-check"></i> Đã kết nối Roblox thành công</div>
 
-            <button class="btn-action btn-logout" onclick="logout()">
-                <i class="fa-solid fa-power-off"></i>
-                <span>ĐĂNG XUẤT</span>
-            </button>
+            <!-- Khung Vé Sự Kiện Top -->
+            <div class="ticket-card">
+                <div class="ticket-notch-top"></div>
+                <div class="ticket-notch-bottom"></div>
+
+                <div class="ticket-left">
+                    <div>
+                        <div class="ticket-title">
+                            CHƯƠNG TRÌNH CHÍNH LUẬN - NGHỆ THUẬT ÁNH SÁNG HÀO KHÍ THÁNG TÁM | LOTUSENM X MTDS THE EVENT
+                        </div>
+                        
+                        <div class="ticket-meta">
+                            <div class="meta-item">
+                                <i class="fa-regular fa-calendar-days"></i>
+                                <span>20:00 - 23:00, 31 Tháng 8, 2025</span>
+                            </div>
+                            <div class="meta-item">
+                                <i class="fa-solid fa-location-dot"></i>
+                                <div>
+                                    <span>Sân Vận Động Quốc Gia Mỹ Đình</span>
+                                    <span class="meta-sub">Giá Nhập Trong Nền Tảng Roblox</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="ticket-divider"></div>
+                        <div class="price-section">
+                            <span class="price-label">Giá từ</span>
+                            <span class="price-value">0 ROBUX</span>
+                        </div>
+                        <button class="btn-status" disabled>Sự kiện đã kết thúc</button>
+                    </div>
+                </div>
+
+                <div class="ticket-right">
+                    <img src="CHUONG_TRINH_NGHE_THUAT_ANH_SANG_CHAO_MUNG_KY_NIEM_50_NAM_Ngay_Giai_phong_Mien_Nam_thong_nhat_at_nuoc_3041975_-_3042025_3.png" alt="Poster Hào Khí Tháng Tám">
+                </div>
+            </div>
+
+            <!-- Khung Giới Thiệu Sự Kiện -->
+            <div class="intro-card">
+                <h3 class="intro-title">Giới thiệu</h3>
+                
+                <p class="intro-text">
+                    Xin chào và cảm ơn bạn đã đăng ký tham gia chương trình Chính luận – Nghệ thuật ánh sáng <strong>"Hào khí Tháng Tám"</strong>, tái hiện lại hành trình 80 năm Cách mạng Tháng Tám và Quốc khánh 2/9 bằng công nghệ hiện đại trên nền tảng ROBLOX.
+                </p>
+
+                <div class="event-highlight-box">
+                    <p>📅 <strong>Sự kiện sẽ diễn ra lúc:</strong> 20:00, Chủ nhật, ngày 31/8/2025</p>
+                    <p>📍 <strong>Địa điểm:</strong> Sân vận động Quốc gia Mỹ Đình – mô phỏng 3D trên ROBLOX</p>
+                </div>
+
+                <p style="color: #e5e7eb; font-weight: 600; font-size: 14px;">Trong máy chủ này, bạn sẽ:</p>
+                <ul class="checklist-list">
+                    <li><i class="fa-solid fa-check"></i> Nhận thông báo và hướng dẫn chính thức từ Ban Tổ chức</li>
+                    <li><i class="fa-solid fa-check"></i> Được hỗ trợ kỹ thuật, giải đáp thắc mắc trước và trong buổi diễn</li>
+                    <li><i class="fa-solid fa-check"></i> Cập nhật trước những hình ảnh hậu trường, trailer độc quyền</li>
+                </ul>
+
+                <p class="intro-text">
+                    Một lần nữa, chào mừng bạn đến với không gian cộng đồng của "Hào khí Tháng Tám". Cảm ơn vì đã đồng hành cùng chúng tôi trên hành trình tri ân lịch sử và truyền cảm hứng dựng xây tương lai!
+                </p>
+
+                <div class="banner-bottom">
+                    <img src="CHAO_MUNG_QUY_KHAN_GIA_1.png" alt="Cảm ơn vì đã đến">
+                </div>
+            </div>
+
         </div>
 
     </div>
 
     <script>
-        // Kiểm tra phiên làm việc cũ khi tải trang
+        // Tự động kiểm tra trạng thái khi tải trang
         window.onload = function() {
             const savedUser = localStorage.getItem("robloxUser");
             if (savedUser) {
@@ -296,20 +582,19 @@
             }
 
             msg.style.color = "#38bdf8";
-            msg.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> Đang xử lý...";
+            msg.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> Đang kết nối...";
 
             setTimeout(() => {
                 localStorage.setItem("robloxUser", usernameInput);
                 renderDashboard(usernameInput);
-            }, 400);
+            }, 500);
         }
 
         function renderDashboard(username) {
             document.getElementById('login-card').classList.add('hidden');
-            document.getElementById('dashboard-card').classList.remove('hidden');
+            document.getElementById('dashboard-container').classList.remove('hidden');
             
             document.getElementById('welcome-username').innerText = username;
-            document.getElementById('display-name').innerText = `@${username}`;
         }
 
         function logout() {
@@ -318,7 +603,7 @@
             document.getElementById('roblox-username').value = "";
             document.getElementById('status-msg').innerText = "";
             
-            document.getElementById('dashboard-card').classList.add('hidden');
+            document.getElementById('dashboard-container').classList.add('hidden');
             document.getElementById('login-card').classList.remove('hidden');
         }
     </script>
