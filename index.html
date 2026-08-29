@@ -28,7 +28,7 @@
             position: relative;
         }
 
-        /* Đèn Neon mờ tạo độ sâu cho nền #08090d */
+        /* Hiệu ứng Đèn Neon mờ tạo độ sâu */
         .glow-orb {
             position: fixed;
             border-radius: 50%;
@@ -184,7 +184,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 15px 25px;
-            background: rgba(18, 20, 29, 0.85);
+            background: rgba(39, 42, 51, 0.9);
             border-radius: 16px;
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
@@ -223,158 +223,160 @@
             color: #fff;
         }
 
-        /* KHUNG VÉ SỰ KIỆN */
+        /* KHUNG VÉ SỰ KIỆN TỈ LỆ CHUẨN MẪU */
         .ticket-card {
             display: grid;
-            grid-template-columns: 1fr 1.2fr;
+            grid-template-columns: 38% 62%;
             position: relative;
-            background: #232630;
+            background: #272a33;
             border-radius: 16px;
             overflow: hidden;
             border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
         }
 
-        /* Phân cách đường đứt nét ở cuống vé */
+        /* Cuống vé bên trái */
         .ticket-left {
-            padding: 30px 25px;
+            padding: 22px 20px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             position: relative;
-            background: #232630;
+            background: #272a33;
             border-right: 2px dashed rgba(255, 255, 255, 0.25);
+            z-index: 2;
         }
 
+        /* Lỗ khuyết bánh xe vé đặt chuẩn giao điểm đường đứt nét */
+        .ticket-notch-top, .ticket-notch-bottom {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            background: #08090d; /* Khớp màu nền body */
+            border-radius: 50%;
+            z-index: 10;
+            right: -12px;
+        }
+        .ticket-notch-top { top: -12px; }
+        .ticket-notch-bottom { bottom: -12px; }
+
         .ticket-title {
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 800;
-            line-height: 1.4;
+            line-height: 1.35;
             color: #ffffff;
             text-transform: uppercase;
-            margin-bottom: 20px;
+            margin-bottom: 14px;
         }
 
         .ticket-meta {
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            font-size: 14px;
-            margin-bottom: 25px;
+            gap: 8px;
+            font-size: 13px;
+            margin-bottom: 15px;
         }
 
         .meta-item {
             display: flex;
             align-items: flex-start;
-            gap: 10px;
+            gap: 8px;
             color: #38bdf8;
             font-weight: 600;
         }
 
         .meta-item i {
             margin-top: 3px;
-            font-size: 15px;
+            font-size: 14px;
         }
 
         .meta-sub {
             color: #8a93a6;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 400;
             display: block;
-            margin-top: 2px;
+            margin-top: 1px;
         }
 
         .ticket-divider {
             height: 1px;
-            background: rgba(255, 255, 255, 0.1);
-            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.12);
+            margin: 10px 0 12px 0;
         }
 
         .price-section {
             display: flex;
             align-items: baseline;
-            gap: 10px;
-            margin-bottom: 15px;
+            gap: 8px;
+            margin-bottom: 10px;
         }
 
         .price-label {
-            font-size: 15px;
+            font-size: 14px;
             color: #a0a5b5;
         }
 
         .price-value {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 800;
-            color: #3b82f6;
+            color: #38bdf8;
         }
 
         .btn-status {
             width: 100%;
-            padding: 12px;
-            background: #3b3e4a;
-            color: #8b92a5;
+            padding: 10px;
+            background: #1d2027;
+            color: #727a8c;
             border: none;
             border-radius: 8px;
             font-weight: 700;
-            font-size: 14px;
+            font-size: 13px;
             cursor: not-allowed;
             text-align: center;
         }
 
-        /* Khung bên phải hiển thị đầy đủ ảnh poster */
+        /* Khung chứa poster bên phải tỉ lệ 16:9 */
         .ticket-right {
             position: relative;
-            min-height: 250px;
-            background: #000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            width: 100%;
+            height: 100%;
+            aspect-ratio: 16 / 9;
+            background: #181a20;
             overflow: hidden;
         }
 
         .ticket-right img {
             width: 100%;
             height: 100%;
-            object-fit: contain; /* Hiển thị trọn vẹn 100% hình ảnh không bị cắt xén */
+            object-fit: cover; /* Hiển thị trọn vẹn poster 16:9 không tạo khoảng trắng */
             display: block;
         }
 
-        /* Lỗ khuyết hai đầu vé trùng màu nền #08090d */
-        .ticket-notch-top, .ticket-notch-bottom {
-            position: absolute;
-            width: 24px;
-            height: 24px;
-            background: #08090d;
-            border-radius: 50%;
-            z-index: 5;
-            left: calc(45.45% - 12px);
-        }
-        .ticket-notch-top { top: -12px; }
-        .ticket-notch-bottom { bottom: -12px; }
-
-        /* GIỚI THIỆU SỰ KIỆN */
+        /* KHUNG GIỚI THIỆU SỰ KIỆN */
         .intro-card {
-            background: #232630;
+            background: #272a33;
             border-radius: 16px;
-            padding: 30px;
+            padding: 28px;
             border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
         }
 
         .intro-title {
             font-size: 22px;
             font-weight: 700;
             color: #38bdf8;
-            margin-bottom: 18px;
+            margin-bottom: 16px;
         }
 
         .intro-text {
             color: #d1d5db;
             font-size: 14px;
             line-height: 1.6;
-            margin-bottom: 20px;
+            margin-bottom: 18px;
         }
 
         .event-highlight-box {
-            margin-bottom: 20px;
+            margin-bottom: 18px;
             color: #d1d5db;
             font-size: 14px;
             line-height: 1.8;
@@ -382,7 +384,7 @@
 
         .checklist-list {
             list-style: none;
-            margin: 15px 0 20px 0;
+            margin: 12px 0 18px 0;
             display: flex;
             flex-direction: column;
             gap: 8px;
@@ -406,20 +408,20 @@
             overflow: hidden;
             margin-top: 20px;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            background: #000;
         }
 
         .banner-bottom img {
             width: 100%;
             height: auto;
             display: block;
-            object-fit: contain;
+            object-fit: cover;
         }
 
         .hidden {
             display: none !important;
         }
 
+        /* Responsive Mobile */
         @media (max-width: 768px) {
             .ticket-card {
                 grid-template-columns: 1fr;
@@ -432,7 +434,7 @@
                 display: none;
             }
             .ticket-right {
-                height: 220px;
+                aspect-ratio: 16 / 9;
             }
         }
     </style>
@@ -444,7 +446,7 @@
 
     <div class="portal-container">
         
-        <!-- FORM ĐĂNG NHẬP -->
+        <!-- MÀN HÌNH ĐĂNG NHẬP -->
         <div class="glass-card" id="login-card">
             <div class="brand-icon">
                 <i class="fa-solid fa-gamepad"></i>
@@ -468,6 +470,7 @@
         <!-- MÀN HÌNH SỰ KIỆN & VÉ -->
         <div id="dashboard-container" class="hidden">
             
+            <!-- User Bar -->
             <div class="user-header-bar">
                 <div class="user-info">
                     <div class="user-avatar-icon"><i class="fa-solid fa-user"></i></div>
@@ -481,12 +484,12 @@
                 </button>
             </div>
 
-            <!-- VÉ SỰ KIỆN -->
+            <!-- VÉ SỰ KIỆN CHUẨN TỈ LỆ MẪU -->
             <div class="ticket-card">
-                <div class="ticket-notch-top"></div>
-                <div class="ticket-notch-bottom"></div>
-
                 <div class="ticket-left">
+                    <div class="ticket-notch-top"></div>
+                    <div class="ticket-notch-bottom"></div>
+
                     <div>
                         <div class="ticket-title">
                             CHƯƠNG TRÌNH CHÍNH LUẬN - NGHỆ THUẬT ÁNH SÁNG HÀO KHÍ THÁNG TÁM | LOTUSENM X MTDS THE EVENT
