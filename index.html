@@ -657,51 +657,50 @@
             btn.innerHTML = '<i class="fa-solid fa-circle-check"></i> <span>ĐÃ ĐĂNG KÝ VÉ THÀNH CÔNG</span>';
         }
 
-// HÀM GỬI THÔNG TIN ĐĂNG KÝ VỀ GOOGLE SHEETS
-function registerTicket() {
-    const btn = document.getElementById('btn-register-ticket');
-    const username = localStorage.getItem("robloxUser");
-    const email = localStorage.getItem("robloxEmail");
-
-    if (!username || !email) {
-        alert("Vui lòng đăng nhập lại!");
-        return;
-    }
-
-    btn.disabled = true;
-    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>ĐANG KIỂM TRA & XỬ LÝ...</span>';
-
-    fetch(GOOGLE_SCRIPT_URL, {
-        method: "POST",
-        body: JSON.stringify({
-            username: username,
-            email: email
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.result === "success") {
-            // Đăng ký thành công lần đầu
-            localStorage.setItem("ticketRegistered_" + username, "true");
-            setTicketRegisteredState();
-            alert("Chúc mừng! Bạn đã đăng ký nhận vé sự kiện thành công.");
-        } else if (data.result === "exists") {
-            // Đã tồn tại Email hoặc Username trong Google Sheet
-            setTicketRegisteredState();
-            alert("Thông báo: " + data.message);
-        } else {
-            // Lỗi hệ thống khác
-            btn.disabled = false;
-            btn.innerHTML = '<i class="fa-solid fa-ticket"></i> <span>ĐĂNG KÝ NHẬN VÉ SỰ KIỆN</span>';
-            alert("Đã có lỗi xảy ra: " + (data.error || "Không thể đăng ký"));
-        }
-    })
-    .catch(error => {
-        btn.disabled = false;
-        btn.innerHTML = '<i class="fa-solid fa-ticket"></i> <span>ĐĂNG KÝ NHẬN VÉ SỰ KIỆN</span>';
-        alert("Lỗi kết nối tới máy chủ: " + error.message);
-    });
-}
+        function registerTicket() {
+            const btn = document.getElementById('btn-register-ticket');
+            const username = localStorage.getItem("robloxUser");
+            const email = localStorage.getItem("robloxEmail");
+        
+            if (!username || !email) {
+                alert("Vui lòng đăng nhập lại!");
+                return;
+            }
+        
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>ĐANG KIỂM TRA & XỬ LÝ...</span>';
+        
+            fetch(GOOGLE_SCRIPT_URL, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "text/plain;charset=utf-8"
+                },
+                body: JSON.stringify({
+                    username: username,
+                    email: email
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.result === "success") {
+                    localStorage.setItem("ticketRegistered_" + username, "true");
+                    setTicketRegisteredState();
+                    alert("Chúc mừng! Bạn đã đăng ký nhận vé sự kiện thành công.");
+                } else if (data.result === "exists") {
+                    setTicketRegisteredState();
+                    alert("Thông báo: " + data.message);
+                } else {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fa-solid fa-ticket"></i> <span>ĐĂNG KÝ NHẬN VÉ SỰ KIỆN</span>';
+                    alert("Lỗi: " + data.message);
+                }
+            })
+            .catch(error => {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-ticket"></i> <span>ĐĂNG KÝ NHẬN VÉ SỰ KIỆN</span>';
+                alert("Lỗi kết nối tới máy chủ kiểm tra: " + error.message);
+            });
+        }  
         function logout() {
             localStorage.removeItem("robloxUser");
             localStorage.removeItem("robloxEmail");
