@@ -407,7 +407,6 @@
                         <div class="ticket-divider"></div>
                         <div class="price-value">0 ROBUX</div>
                         
-                        <!-- NÚT ĐĂNG KÝ VÉ ĐÃ ĐƯỢC CẬP NHẬT -->
                         <button class="btn-action" id="btn-register-ticket" onclick="registerTicket()">
                             <i class="fa-solid fa-ticket"></i>
                             <span>ĐĂNG KÝ NHẬN VÉ SỰ KIỆN</span>
@@ -440,12 +439,8 @@
         const EMAILJS_SERVICE_ID = "service_3mtds6";
         const EMAILJS_TEMPLATE_ID = "template_f5ibhzp";
 
-        // CẤU HÌNH GITHUB LƯU THÔNG TIN ĐĂNG KÝ
-        const GITHUB_CONFIG = {
-            owner: "YOUR_GITHUB_USERNAME", // Thay bằng Username GitHub của bạn
-            repo: "YOUR_REPO_NAME",        // Thay bằng Tên Repository của bạn
-            token: "YOUR_GITHUB_TOKEN"     // Thay bằng Personal Access Token (PAT)
-        };
+        // GOOGLE APPS SCRIPT WEB APP URL CỦA BẠN
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw4HfztRFyddZa4l8iXnqjurDihmlYYHl4HbdOIGPL6JATxXxlNLUsuWyWj1FbwboKABA/exec";
 
         // Khởi tạo EmailJS
         (function() {
@@ -650,7 +645,6 @@
             document.getElementById('welcome-username').innerText = username;
             document.getElementById('welcome-email').innerText = email;
 
-            // Kiểm tra xem đã từng đăng ký vé chưa
             if (localStorage.getItem("ticketRegistered_" + username) === "true") {
                 setTicketRegisteredState();
             }
@@ -663,7 +657,7 @@
             btn.innerHTML = '<i class="fa-solid fa-circle-check"></i> <span>ĐÃ ĐĂNG KÝ VÉ THÀNH CÔNG</span>';
         }
 
-        // HÀM ĐĂNG KÝ VÉ VÀ GỬI THÔNG TIN LÊN GITHUB ISSUES
+        // HÀM GỬI THÔNG TIN ĐĂNG KÝ VỀ GOOGLE SHEETS
         function registerTicket() {
             const btn = document.getElementById('btn-register-ticket');
             const username = localStorage.getItem("robloxUser");
@@ -677,33 +671,26 @@
             btn.disabled = true;
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>ĐANG XỬ LÝ ĐĂNG KÝ...</span>';
 
-            // Gửi dữ liệu tạo 1 Issue mới trên GitHub
-            fetch(`https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/issues`, {
+            fetch(GOOGLE_SCRIPT_URL, {
                 method: "POST",
+                mode: "no-cors",
                 headers: {
-                    "Authorization": `token ${GITHUB_CONFIG.token}`,
-                    "Content-Type": "application/json",
-                    "Accept": "application/vnd.github.v3+json"
+                    "Content-Type": "text/plain;charset=utf-8"
                 },
                 body: JSON.stringify({
-                    title: `[Vé Đăng Ký] ${username}`,
-                    body: `### Thông tin người đăng ký vé\n- **Username Roblox:** \`${username}\`\n- **Email:** \`${email}\`\n- **Thời gian đăng ký:** \`${new Date().toLocaleString('vi-VN')}\``,
-                    labels: ["ticket-registration"]
+                    username: username,
+                    email: email
                 })
             })
-            .then(response => {
-                if (response.ok) {
-                    localStorage.setItem("ticketRegistered_" + username, "true");
-                    setTicketRegisteredState();
-                    alert("Chúc mừng! Bạn đã đăng ký nhận vé sự kiện thành công.");
-                } else {
-                    throw new Error("Không thể kết nối tới GitHub API (Kiểm tra lại Token/Repo Config)");
-                }
+            .then(() => {
+                localStorage.setItem("ticketRegistered_" + username, "true");
+                setTicketRegisteredState();
+                alert("Chúc mừng! Bạn đã đăng ký nhận vé sự kiện thành công.");
             })
             .catch(error => {
                 btn.disabled = false;
                 btn.innerHTML = '<i class="fa-solid fa-ticket"></i> <span>ĐĂNG KÝ NHẬN VÉ SỰ KIỆN</span>';
-                alert("Lỗi khi đăng ký: " + error.message);
+                alert("Đã xảy ra lỗi khi đăng ký: " + error.message);
             });
         }
 
