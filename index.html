@@ -142,7 +142,6 @@
             box-shadow: 0 0 15px rgba(0, 180, 216, 0.35);
         }
 
-        /* --- THIẾT KẾ 6 Ô VUÔNG OTP --- */
         .otp-container {
             display: flex;
             gap: 10px;
@@ -199,19 +198,13 @@
             caret-color: #00b4d8;
         }
 
-        /* Trạng thái 1: Focus */
-        .otp-box-wrapper.focused::before {
-            opacity: 1;
-        }
-
-        /* Trạng thái 2: Đang tự động kiểm tra */
+        .otp-box-wrapper.focused::before { opacity: 1; }
         .otp-box-wrapper.verifying::before {
             opacity: 1;
             animation-duration: 0.8s;
             background: conic-gradient(from 0deg, transparent 0 220deg, #00b4d8 360deg);
         }
 
-        /* Trạng thái 3: Nhập Sai (Viền đỏ + Rung) */
         .otp-box-wrapper.error::before {
             opacity: 1;
             background: conic-gradient(from 0deg, transparent 0 220deg, #ef4444 360deg);
@@ -222,7 +215,6 @@
             box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
         }
 
-        /* Trạng thái 4: Nhập Đúng */
         .otp-box-wrapper.success::before {
             opacity: 1;
             background: conic-gradient(from 0deg, transparent 0 220deg, #10b981 360deg);
@@ -251,7 +243,7 @@
             border: none;
             border-radius: 14px;
             color: #fff;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -262,10 +254,15 @@
             gap: 10px;
         }
 
-        .btn-action:hover {
+        .btn-action:hover:not(:disabled) {
             transform: translateY(-2px);
             background: linear-gradient(135deg, #0096c7, #0077b6);
             box-shadow: 0 15px 30px rgba(0, 180, 216, 0.45);
+        }
+
+        .btn-action:disabled {
+            cursor: not-allowed;
+            opacity: 0.85;
         }
 
         .btn-secondary {
@@ -301,8 +298,8 @@
         .ticket-meta { display: flex; flex-direction: column; gap: 8px; font-size: 13px; margin-bottom: 15px; }
         .meta-item { display: flex; align-items: flex-start; gap: 8px; color: #38bdf8; font-weight: 600; }
         .ticket-divider { height: 1px; background: rgba(255, 255, 255, 0.12); margin: 10px 0 12px 0; }
-        .price-value { font-size: 20px; font-weight: 800; color: #38bdf8; }
-        .btn-status { width: 100%; padding: 10px; background: #1d2027; color: #727a8c; border: none; border-radius: 8px; font-weight: 700; font-size: 13px; }
+        .price-value { font-size: 20px; font-weight: 800; color: #38bdf8; margin-bottom: 10px; }
+        
         .ticket-right { aspect-ratio: 16 / 9; background: #181a20; }
         .ticket-right img { width: 100%; height: 100%; object-fit: cover; }
         
@@ -363,7 +360,7 @@
                 </button>
             </div>
 
-            <!-- BƯỚC 2: NHẬP MÃ OTP VỚI 6 Ô VUÔNG (TỰ ĐỘNG XÁC NHẬN) -->
+            <!-- BƯỚC 2: NHẬP MÃ OTP -->
             <div id="step-2-form" class="hidden">
                 <div class="input-box">
                     <label style="text-align: center; display: block;">Nhập đủ 6 số OTP (Hệ thống tự xác nhận)</label>
@@ -409,7 +406,12 @@
                     <div>
                         <div class="ticket-divider"></div>
                         <div class="price-value">0 ROBUX</div>
-                        <button class="btn-status" disabled>Sự kiện đã kết thúc</button>
+                        
+                        <!-- NÚT ĐĂNG KÝ VÉ ĐÃ ĐƯỢC CẬP NHẬT -->
+                        <button class="btn-action" id="btn-register-ticket" onclick="registerTicket()">
+                            <i class="fa-solid fa-ticket"></i>
+                            <span>ĐĂNG KÝ NHẬN VÉ SỰ KIỆN</span>
+                        </button>
                     </div>
                 </div>
                 <div class="ticket-right">
@@ -433,12 +435,19 @@
     </div>
 
     <script>
-        // Thông số cấu hình EmailJS
+        // CẤU HÌNH EMAILJS
         const EMAILJS_PUBLIC_KEY = "b2GlPCwH-PmpkEM09";
         const EMAILJS_SERVICE_ID = "service_3mtds6";
         const EMAILJS_TEMPLATE_ID = "template_f5ibhzp";
 
-        // Khởi tạo SDK EmailJS
+        // CẤU HÌNH GITHUB LƯU THÔNG TIN ĐĂNG KÝ
+        const GITHUB_CONFIG = {
+            owner: "YOUR_GITHUB_USERNAME", // Thay bằng Username GitHub của bạn
+            repo: "YOUR_REPO_NAME",        // Thay bằng Tên Repository của bạn
+            token: "YOUR_GITHUB_TOKEN"     // Thay bằng Personal Access Token (PAT)
+        };
+
+        // Khởi tạo EmailJS
         (function() {
             emailjs.init(EMAILJS_PUBLIC_KEY);
         })();
@@ -460,7 +469,6 @@
             }
         };
 
-        // --- TƯƠNG TÁC CỦA 6 Ô VUÔNG OTP ---
         function setupOtpEvents() {
             otpInputs.forEach((input, index) => {
                 input.addEventListener('focus', () => {
@@ -528,7 +536,6 @@
             return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
         }
 
-        // 1. GỬI MÃ OTP
         function sendOTP() {
             const username = document.getElementById('roblox-username').value.trim();
             const email = document.getElementById('user-email').value.trim();
@@ -584,7 +591,6 @@
             });
         }
 
-        // 2. TỰ ĐỘNG XÁC THỰC OTP KHI ĐỦ 6 SỐ
         function autoVerifyOTP() {
             if (isVerifying) return;
             isVerifying = true;
@@ -602,7 +608,6 @@
                 otpWrappers.forEach(w => w.classList.remove('verifying'));
 
                 if (userOTP === generatedOTP) {
-                    // ĐÚNG OTP
                     otpWrappers.forEach(w => w.classList.add('success'));
                     msg.style.color = "#10b981";
                     msg.innerHTML = "<i class='fa-solid fa-circle-check'></i> Mã OTP chính xác! Đang vào trang...";
@@ -614,7 +619,6 @@
                         isVerifying = false;
                     }, 600);
                 } else {
-                    // SAI OTP: Hiện viền đỏ + Rung lắc -> Xóa toàn bộ -> Đưa con trỏ về ô 1
                     otpWrappers.forEach(w => w.classList.add('error'));
                     msg.style.color = "#ef4444";
                     msg.innerHTML = "<i class='fa-solid fa-circle-xmark'></i> Mã OTP không chính xác. Vui lòng nhập lại!";
@@ -623,7 +627,7 @@
                         otpInputs.forEach(input => input.value = '');
                         otpInputs[0].focus();
                         isVerifying = false;
-                    }, 400); // Đợi rung hết 0.4s rồi mới làm sạch ô nhập
+                    }, 400);
                 }
             }, 800);
         }
@@ -645,6 +649,62 @@
             document.getElementById('dashboard-container').classList.remove('hidden');
             document.getElementById('welcome-username').innerText = username;
             document.getElementById('welcome-email').innerText = email;
+
+            // Kiểm tra xem đã từng đăng ký vé chưa
+            if (localStorage.getItem("ticketRegistered_" + username) === "true") {
+                setTicketRegisteredState();
+            }
+        }
+
+        function setTicketRegisteredState() {
+            const btn = document.getElementById('btn-register-ticket');
+            btn.disabled = true;
+            btn.style.background = "linear-gradient(135deg, #10b981, #059669)";
+            btn.innerHTML = '<i class="fa-solid fa-circle-check"></i> <span>ĐÃ ĐĂNG KÝ VÉ THÀNH CÔNG</span>';
+        }
+
+        // HÀM ĐĂNG KÝ VÉ VÀ GỬI THÔNG TIN LÊN GITHUB ISSUES
+        function registerTicket() {
+            const btn = document.getElementById('btn-register-ticket');
+            const username = localStorage.getItem("robloxUser");
+            const email = localStorage.getItem("robloxEmail");
+
+            if (!username || !email) {
+                alert("Vui lòng đăng nhập lại!");
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>ĐANG XỬ LÝ ĐĂNG KÝ...</span>';
+
+            // Gửi dữ liệu tạo 1 Issue mới trên GitHub
+            fetch(`https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/issues`, {
+                method: "POST",
+                headers: {
+                    "Authorization": `token ${GITHUB_CONFIG.token}`,
+                    "Content-Type": "application/json",
+                    "Accept": "application/vnd.github.v3+json"
+                },
+                body: JSON.stringify({
+                    title: `[Vé Đăng Ký] ${username}`,
+                    body: `### Thông tin người đăng ký vé\n- **Username Roblox:** \`${username}\`\n- **Email:** \`${email}\`\n- **Thời gian đăng ký:** \`${new Date().toLocaleString('vi-VN')}\``,
+                    labels: ["ticket-registration"]
+                })
+            })
+            .then(response => {
+                if (response.ok) {
+                    localStorage.setItem("ticketRegistered_" + username, "true");
+                    setTicketRegisteredState();
+                    alert("Chúc mừng! Bạn đã đăng ký nhận vé sự kiện thành công.");
+                } else {
+                    throw new Error("Không thể kết nối tới GitHub API (Kiểm tra lại Token/Repo Config)");
+                }
+            })
+            .catch(error => {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-ticket"></i> <span>ĐĂNG KÝ NHẬN VÉ SỰ KIỆN</span>';
+                alert("Lỗi khi đăng ký: " + error.message);
+            });
         }
 
         function logout() {
